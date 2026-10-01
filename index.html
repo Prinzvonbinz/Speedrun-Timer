@@ -16,7 +16,6 @@
     --accent:#4da3ff;
     --green:#48d597;
     --red:#ff6262;
-    --yellow:#e8c95b;
 }
 
 *{
@@ -34,6 +33,10 @@ html,body{
     font-family:Arial,Helvetica,sans-serif;
 }
 
+body{
+    min-height:100vh;
+}
+
 button,input{
     font:inherit;
 }
@@ -47,8 +50,6 @@ button{
     width:100%;
     min-height:100vh;
 }
-
-/* HEADER */
 
 .header{
     height:64px;
@@ -78,8 +79,6 @@ button{
     display:flex;
     gap:8px;
 }
-
-/* BUTTONS */
 
 .btn{
     background:var(--panel2);
@@ -114,8 +113,6 @@ button{
     font-size:13px;
 }
 
-/* MAIN */
-
 .main{
     max-width:1100px;
     width:calc(100% - 28px);
@@ -136,8 +133,6 @@ button{
     margin:0;
     color:var(--muted);
 }
-
-/* PROJECT GRID */
 
 .project-grid{
     display:grid;
@@ -176,8 +171,6 @@ button{
     flex-wrap:wrap;
 }
 
-/* EMPTY */
-
 .empty{
     border:1px dashed #303841;
     border-radius:10px;
@@ -185,8 +178,6 @@ button{
     text-align:center;
     color:var(--muted);
 }
-
-/* TIMER */
 
 .timer-page{
     max-width:1200px;
@@ -224,6 +215,8 @@ button{
     display:flex;
     gap:7px;
     flex-shrink:0;
+    flex-wrap:wrap;
+    justify-content:flex-end;
 }
 
 .timer-display{
@@ -252,7 +245,7 @@ button{
 
 .timer-controls{
     display:grid;
-    grid-template-columns:1fr 1fr 1fr;
+    grid-template-columns:1fr 1fr 1fr 1fr;
     gap:8px;
     margin-bottom:12px;
 }
@@ -283,12 +276,15 @@ button{
     background:#252a30;
 }
 
+.control.reset{
+    background:#171b20;
+    color:#ff8a8a;
+}
+
 .control:disabled{
     opacity:.35;
     cursor:not-allowed;
 }
-
-/* COMPARISON */
 
 .compare-bar{
     display:grid;
@@ -323,7 +319,17 @@ button{
     font-weight:700;
 }
 
-/* SEGMENTS */
+.good{
+    color:var(--green);
+}
+
+.bad{
+    color:var(--red);
+}
+
+.neutral{
+    color:var(--muted);
+}
 
 .segment-list{
     background:var(--panel);
@@ -386,39 +392,6 @@ button{
     font-variant-numeric:tabular-nums;
 }
 
-.good{
-    color:var(--green);
-}
-
-.bad{
-    color:var(--red);
-}
-
-.neutral{
-    color:var(--muted);
-}
-
-.segment-menu{
-    display:flex;
-    justify-content:flex-end;
-    gap:4px;
-}
-
-.icon-btn{
-    background:transparent;
-    color:var(--muted);
-    border:1px solid transparent;
-    border-radius:5px;
-    padding:5px 7px;
-}
-
-.icon-btn:hover{
-    background:#20262d;
-    color:var(--text);
-}
-
-/* FOOTER TIMER */
-
 .timer-footer{
     margin-top:10px;
     display:flex;
@@ -431,8 +404,6 @@ button{
 .keyboard{
     font-family:Consolas,Monaco,"Courier New",monospace;
 }
-
-/* MODALS */
 
 .modal-overlay{
     position:fixed;
@@ -448,6 +419,8 @@ button{
 .modal{
     width:100%;
     max-width:450px;
+    max-height:90vh;
+    overflow:auto;
     background:#101419;
     border:1px solid var(--border);
     border-radius:11px;
@@ -491,8 +464,6 @@ button{
     margin-top:18px;
 }
 
-/* HISTORY */
-
 .history{
     margin-top:14px;
     background:var(--panel);
@@ -528,8 +499,6 @@ button{
     text-transform:uppercase;
 }
 
-/* RESPONSIVE */
-
 @media(max-width:720px){
 
     .main{
@@ -557,10 +526,6 @@ button{
         grid-area:name;
     }
 
-    .segment-menu{
-        grid-area:menu;
-    }
-
     .segment-time{
         grid-area:time;
         text-align:left;
@@ -585,6 +550,10 @@ button{
 
     .timer-actions .btn{
         padding:7px 9px;
+    }
+
+    .timer-controls{
+        grid-template-columns:1fr 1fr;
     }
 
     .history-row{
@@ -626,12 +595,6 @@ button{
         font-size:48px;
     }
 }
-
-/* HIDDEN */
-
-.hidden{
-    display:none !important;
-}
 </style>
 </head>
 
@@ -640,12 +603,23 @@ button{
 <div class="app">
 
 <header class="header">
-    <div class="logo">SPEED<span>RUN</span></div>
+
+    <div class="logo">
+        SPEED<span>RUN</span>
+    </div>
 
     <div class="header-actions">
-        <button class="btn small" id="homeBtn">Runs</button>
-        <button class="btn small" id="settingsBtn">⚙</button>
+
+        <button class="btn small" id="homeBtn">
+            Runs
+        </button>
+
+        <button class="btn small" id="settingsBtn">
+            ⚙
+        </button>
+
     </div>
+
 </header>
 
 <main id="app"></main>
@@ -655,47 +629,45 @@ button{
 <div id="modalRoot"></div>
 
 <script>
+
 "use strict";
 
-/* =========================================================
-   SPEEDRUN TIMER
-   ========================================================= */
-
-const STORAGE_KEY = "speedrun_timer_v1";
+const STORAGE_KEY = "speedrun_timer_v2";
 
 let database = loadDatabase();
 
 let state = {
-    page: "home",
-    projectId: null,
-    running: false,
-    finished: false,
-    startTime: 0,
-    elapsedBeforeStart: 0,
-    lastSplitTimestamp: 0,
-    currentSegment: 0,
-    segmentTimes: [],
-    runStartDate: null
+    page:"home",
+    projectId:null,
+    running:false,
+    finished:false,
+    startTime:0,
+    elapsedBeforeStart:0,
+    currentSegment:0,
+    segmentTimes:[],
+    runStartDate:null
 };
 
 let timerInterval = null;
 
 
-/* =========================================================
+/* =========================
    DATABASE
-   ========================================================= */
+========================= */
 
 function loadDatabase(){
+
     try{
-        const raw = localStorage.getItem(STORAGE_KEY);
+
+        const raw =
+            localStorage.getItem(STORAGE_KEY);
 
         if(!raw){
-            return {
-                projects: []
-            };
+            return {projects:[]};
         }
 
-        const parsed = JSON.parse(raw);
+        const parsed =
+            JSON.parse(raw);
 
         if(!parsed.projects){
             parsed.projects = [];
@@ -704,50 +676,66 @@ function loadDatabase(){
         return parsed;
 
     }catch(error){
-        return {
-            projects: []
-        };
+
+        return {projects:[]};
+
     }
 }
 
 function saveDatabase(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(database));
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(database)
+    );
 }
 
 function createId(){
-    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+
+    return Date.now().toString(36) +
+        Math.random().toString(36).slice(2);
 }
 
 function getProject(){
-    return database.projects.find(p => p.id === state.projectId);
+
+    return database.projects.find(
+        p => p.id === state.projectId
+    );
 }
 
 
-/* =========================================================
+/* =========================
    TIME
-   ========================================================= */
+========================= */
 
-function formatTime(ms, decimals = 2){
+function formatTime(ms){
 
     if(ms == null || isNaN(ms)){
-        return "--:--.--";
+        return "00:00.00";
     }
 
-    ms = Math.max(0, ms);
+    ms = Math.max(0,ms);
 
-    const totalSeconds = Math.floor(ms / 1000);
+    const totalSeconds =
+        Math.floor(ms / 1000);
 
-    const milliseconds = Math.floor(ms % 1000);
+    const milliseconds =
+        Math.floor(ms % 1000);
 
-    const hours = Math.floor(totalSeconds / 3600);
+    const hours =
+        Math.floor(totalSeconds / 3600);
 
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const minutes =
+        Math.floor((totalSeconds % 3600) / 60);
 
-    const seconds = totalSeconds % 60;
+    const seconds =
+        totalSeconds % 60;
 
-    const hundredths = Math.floor(milliseconds / 10);
+    const hundredths =
+        Math.floor(milliseconds / 10);
 
     if(hours > 0){
+
         return (
             String(hours).padStart(2,"0") +
             ":" +
@@ -757,6 +745,7 @@ function formatTime(ms, decimals = 2){
             "." +
             String(hundredths).padStart(2,"0")
         );
+
     }
 
     return (
@@ -774,15 +763,18 @@ function formatDelta(ms){
         return "—";
     }
 
-    const sign = ms > 0 ? "+" : ms < 0 ? "-" : "";
+    const sign =
+        ms > 0 ? "+" :
+        ms < 0 ? "-" :
+        "";
 
     return sign + formatTime(Math.abs(ms));
 }
 
 
-/* =========================================================
+/* =========================
    HOME
-   ========================================================= */
+========================= */
 
 function renderHome(){
 
@@ -790,33 +782,64 @@ function renderHome(){
 
     stopVisualTimer();
 
-    const projects = database.projects;
+    const projects =
+        database.projects;
 
     document.getElementById("app").innerHTML = `
+
         <div class="main">
 
             <div class="page-title">
+
                 <h1>Meine Runs</h1>
-                <p>Wähle einen Speedrun aus oder erstelle einen neuen.</p>
+
+                <p>
+                    Wähle einen Speedrun aus oder
+                    erstelle einen neuen.
+                </p>
+
             </div>
 
             <div style="margin-bottom:16px">
-                <button class="btn primary" onclick="openProjectModal()">
+
+                <button
+                    class="btn primary"
+                    onclick="openProjectModal()">
+
                     + Neuer Speedrun
+
                 </button>
+
             </div>
 
             ${
                 projects.length
+
                 ?
+
                 `<div class="project-grid">
-                    ${projects.map(renderProjectCard).join("")}
+
+                    ${projects
+                        .map(renderProjectCard)
+                        .join("")}
+
                 </div>`
+
                 :
+
                 `<div class="empty">
-                    <div style="font-size:30px;margin-bottom:10px">⏱</div>
+
+                    <div style="
+                        font-size:30px;
+                        margin-bottom:10px
+                    ">
+                        ⏱
+                    </div>
+
                     Noch keine Speedruns vorhanden.<br>
+
                     Erstelle deinen ersten Run.
+
                 </div>`
             }
 
@@ -826,40 +849,69 @@ function renderHome(){
 
 function renderProjectCard(project){
 
-    const pb = getProjectPB(project);
+    const pb =
+        getProjectPB(project);
 
     return `
+
         <div class="project-card">
 
             <div class="project-name">
+
                 ${escapeHTML(project.name)}
+
             </div>
 
             <div class="project-info">
-                ${project.segments.length} Segmente
-                · ${project.history.length} Runs
+
+                ${project.segments.length}
+                Segmente
+
+                ·
+
+                ${project.history.length}
+                Runs
+
                 <br>
+
                 PB:
+
                 <strong>
-                    ${pb == null ? "Noch keine Zeit" : formatTime(pb)}
+
+                    ${
+                        pb == null
+                        ? "Noch keine Zeit"
+                        : formatTime(pb)
+                    }
+
                 </strong>
+
             </div>
 
             <div class="card-buttons">
 
-                <button class="btn primary small"
+                <button
+                    class="btn primary small"
                     onclick="openTimer('${project.id}')">
+
                     Start
+
                 </button>
 
-                <button class="btn small"
+                <button
+                    class="btn small"
                     onclick="openProjectModal('${project.id}')">
+
                     Bearbeiten
+
                 </button>
 
-                <button class="btn danger small"
+                <button
+                    class="btn danger small"
                     onclick="deleteProject('${project.id}')">
+
                     Löschen
+
                 </button>
 
             </div>
@@ -874,76 +926,124 @@ function getProjectPB(project){
         return null;
     }
 
-    const valid = project.history
+    const values =
+        project.history
         .map(r => r.total)
-        .filter(v => typeof v === "number");
+        .filter(
+            value =>
+                typeof value === "number" &&
+                value > 0
+        );
 
-    if(!valid.length){
+    if(!values.length){
         return null;
     }
 
-    return Math.min(...valid);
+    return Math.min(...values);
 }
 
 
-/* =========================================================
+/* =========================
    PROJECT MODAL
-   ========================================================= */
+========================= */
 
 function openProjectModal(projectId = null){
 
-    const project = projectId
-        ? database.projects.find(p => p.id === projectId)
+    const project =
+        projectId
+        ? database.projects.find(
+            p => p.id === projectId
+        )
         : null;
 
-    document.getElementById("modalRoot").innerHTML = `
-        <div class="modal-overlay" onclick="closeModal(event)">
+    document.getElementById(
+        "modalRoot"
+    ).innerHTML = `
 
-            <div class="modal" onclick="event.stopPropagation()">
+        <div
+            class="modal-overlay"
+            onclick="closeModal(event)">
+
+            <div
+                class="modal"
+                onclick="event.stopPropagation()">
 
                 <h2>
-                    ${project ? "Speedrun bearbeiten" : "Neuer Speedrun"}
+                    ${
+                        project
+                        ? "Speedrun bearbeiten"
+                        : "Neuer Speedrun"
+                    }
                 </h2>
 
                 <div class="field">
-                    <label>Name</label>
+
+                    <label>
+                        Name
+                    </label>
+
                     <input
                         id="projectNameInput"
                         maxlength="60"
-                        value="${project ? escapeAttribute(project.name) : ""}"
+                        value="${
+                            project
+                            ? escapeAttribute(project.name)
+                            : ""
+                        }"
                         placeholder="z. B. Super Game Any%"
                         autofocus
                     >
+
                 </div>
 
                 <div class="modal-actions">
 
-                    <button class="btn" onclick="closeModal()">
+                    <button
+                        class="btn"
+                        onclick="closeModal()">
+
                         Abbrechen
+
                     </button>
 
-                    <button class="btn primary"
+                    <button
+                        class="btn primary"
                         onclick="saveProjectModal('${projectId || ""}')">
+
                         Speichern
+
                     </button>
 
                 </div>
 
             </div>
+
         </div>
     `;
 
     setTimeout(() => {
-        const input = document.getElementById("projectNameInput");
-        if(input) input.focus();
+
+        const input =
+            document.getElementById(
+                "projectNameInput"
+            );
+
+        if(input){
+            input.focus();
+        }
+
     },50);
 }
 
 function saveProjectModal(projectId){
 
-    const input = document.getElementById("projectNameInput");
+    const input =
+        document.getElementById(
+            "projectNameInput"
+        );
 
-    const name = input.value.trim();
+    const name =
+        input.value.trim();
 
     if(!name){
         input.focus();
@@ -952,7 +1052,10 @@ function saveProjectModal(projectId){
 
     if(projectId){
 
-        const project = database.projects.find(p => p.id === projectId);
+        const project =
+            database.projects.find(
+                p => p.id === projectId
+            );
 
         if(project){
             project.name = name;
@@ -961,15 +1064,20 @@ function saveProjectModal(projectId){
     }else{
 
         database.projects.push({
+
             id:createId(),
+
             name:name,
+
             segments:[
                 {
                     id:createId(),
                     name:"Start"
                 }
             ],
+
             history:[]
+
         });
 
     }
@@ -983,21 +1091,29 @@ function saveProjectModal(projectId){
 
 function closeModal(event){
 
-    if(event && event.target !== event.currentTarget){
+    if(
+        event &&
+        event.target !== event.currentTarget
+    ){
         return;
     }
 
-    document.getElementById("modalRoot").innerHTML = "";
+    document.getElementById(
+        "modalRoot"
+    ).innerHTML = "";
 }
 
 
-/* =========================================================
+/* =========================
    DELETE PROJECT
-   ========================================================= */
+========================= */
 
 function deleteProject(id){
 
-    const project = database.projects.find(p => p.id === id);
+    const project =
+        database.projects.find(
+            p => p.id === id
+        );
 
     if(!project){
         return;
@@ -1011,7 +1127,10 @@ function deleteProject(id){
         return;
     }
 
-    database.projects = database.projects.filter(p => p.id !== id);
+    database.projects =
+        database.projects.filter(
+            p => p.id !== id
+        );
 
     saveDatabase();
 
@@ -1019,13 +1138,16 @@ function deleteProject(id){
 }
 
 
-/* =========================================================
-   TIMER OPEN
-   ========================================================= */
+/* =========================
+   TIMER
+========================= */
 
 function openTimer(projectId){
 
-    const project = database.projects.find(p => p.id === projectId);
+    const project =
+        database.projects.find(
+            p => p.id === projectId
+        );
 
     if(!project){
         return;
@@ -1039,6 +1161,15 @@ function openTimer(projectId){
     renderTimer();
 }
 
+
+/*
+    WICHTIG:
+    resetCurrentRun verändert niemals
+    die Segmente selbst.
+    Es werden ausschließlich die
+    aktuellen Zeiten zurückgesetzt.
+*/
+
 function resetCurrentRun(render = true){
 
     stopVisualTimer();
@@ -1047,15 +1178,20 @@ function resetCurrentRun(render = true){
     state.finished = false;
     state.startTime = 0;
     state.elapsedBeforeStart = 0;
-    state.lastSplitTimestamp = 0;
     state.currentSegment = 0;
-    state.segmentTimes = [];
     state.runStartDate = null;
 
     const project = getProject();
 
     if(project){
-        state.segmentTimes = project.segments.map(() => null);
+
+        state.segmentTimes =
+            project.segments.map(() => 0);
+
+    }else{
+
+        state.segmentTimes = [];
+
     }
 
     if(render){
@@ -1064,9 +1200,9 @@ function resetCurrentRun(render = true){
 }
 
 
-/* =========================================================
+/* =========================
    TIMER RENDER
-   ========================================================= */
+========================= */
 
 function renderTimer(){
 
@@ -1077,15 +1213,21 @@ function renderTimer(){
         return;
     }
 
-    const total = getCurrentElapsed();
+    const total =
+        getCurrentElapsed();
 
-    const pb = getProjectPB(project);
+    const pb =
+        getProjectPB(project);
 
-    const currentSegmentTime = getCurrentSegmentElapsed();
+    const currentSegmentTime =
+        getCurrentSegmentElapsed();
 
     const currentBest =
         project.segments[state.currentSegment]
-        ? getBestSegment(project,state.currentSegment)
+        ? getBestSegment(
+            project,
+            state.currentSegment
+        )
         : null;
 
     const delta =
@@ -1093,7 +1235,9 @@ function renderTimer(){
         ? null
         : currentSegmentTime - currentBest;
 
-    document.getElementById("app").innerHTML = `
+    document.getElementById(
+        "app"
+    ).innerHTML = `
 
         <div class="timer-page">
 
@@ -1101,30 +1245,51 @@ function renderTimer(){
 
                 <div class="timer-title">
 
-                    <h1>${escapeHTML(project.name)}</h1>
+                    <h1>
+                        ${escapeHTML(project.name)}
+                    </h1>
 
                     <small>
-                        ${project.segments.length} Segmente
-                        · PB ${pb == null ? "--:--.--" : formatTime(pb)}
+
+                        ${project.segments.length}
+                        Segmente
+
+                        · PB
+
+                        ${
+                            pb == null
+                            ? "--:--.--"
+                            : formatTime(pb)
+                        }
+
                     </small>
 
                 </div>
 
                 <div class="timer-actions">
 
-                    <button class="btn small"
+                    <button
+                        class="btn small"
                         onclick="manageSegments()">
+
                         Segmente
+
                     </button>
 
-                    <button class="btn small"
+                    <button
+                        class="btn small"
                         onclick="showHistory()">
+
                         History
+
                     </button>
 
-                    <button class="btn small"
+                    <button
+                        class="btn small"
                         onclick="goHome()">
+
                         Runs
+
                     </button>
 
                 </div>
@@ -1134,11 +1299,18 @@ function renderTimer(){
 
             <div class="timer-display">
 
-                <div class="big-time" id="mainTimer">
+                <div
+                    class="big-time"
+                    id="mainTimer">
+
                     ${formatTime(total)}
+
                 </div>
 
-                <div class="run-status" id="runStatus">
+                <div
+                    class="run-status"
+                    id="runStatus">
+
                     ${
                         state.finished
                         ? "Run beendet"
@@ -1146,6 +1318,7 @@ function renderTimer(){
                         ? "Läuft"
                         : "Bereit"
                     }
+
                 </div>
 
             </div>
@@ -1159,12 +1332,15 @@ function renderTimer(){
                         Segment
                     </div>
 
-                    <div class="compare-value" id="currentSegmentDisplay">
+                    <div
+                        class="compare-value"
+                        id="currentSegmentDisplay">
+
                         ${formatTime(currentSegmentTime)}
+
                     </div>
 
                 </div>
-
 
                 <div class="compare-item">
 
@@ -1173,15 +1349,16 @@ function renderTimer(){
                     </div>
 
                     <div class="compare-value">
+
                         ${
                             currentBest == null
                             ? "--:--.--"
                             : formatTime(currentBest)
                         }
+
                     </div>
 
                 </div>
-
 
                 <div class="compare-item">
 
@@ -1190,18 +1367,26 @@ function renderTimer(){
                     </div>
 
                     <div
-                        class="compare-value ${
+                        class="
+                            compare-value
+                            ${
+                                delta == null
+                                ? "neutral"
+                                : delta < 0
+                                ? "good"
+                                : delta > 0
+                                ? "bad"
+                                : "neutral"
+                            }
+                        "
+                        id="currentDelta">
+
+                        ${
                             delta == null
-                            ? "neutral"
-                            : delta < 0
-                            ? "good"
-                            : delta > 0
-                            ? "bad"
-                            : "neutral"
-                        }"
-                        id="currentDelta"
-                    >
-                        ${delta == null ? "—" : formatDelta(delta)}
+                            ? "—"
+                            : formatDelta(delta)
+                        }
+
                     </div>
 
                 </div>
@@ -1215,23 +1400,56 @@ function renderTimer(){
                     class="control start"
                     id="startButton"
                     onclick="startTimer()"
-                    ${state.running || state.finished ? "disabled" : ""}>
-                    ${state.currentSegment === 0 && !state.running ? "START" : "FORTSETZEN"}
+                    ${
+                        state.running ||
+                        state.finished
+                        ? "disabled"
+                        : ""
+                    }>
+
+                    ${
+                        state.currentSegment === 0 &&
+                        !state.running
+                        ? "START"
+                        : "FORTSETZEN"
+                    }
+
                 </button>
 
                 <button
                     class="control split"
                     id="splitButton"
                     onclick="splitTimer()"
-                    ${!state.running ? "disabled" : ""}>
+                    ${
+                        !state.running
+                        ? "disabled"
+                        : ""
+                    }>
+
                     SPLIT
+
                 </button>
 
                 <button
                     class="control stop"
+                    id="stopButton"
                     onclick="stopRun()"
-                    ${!state.running ? "disabled" : ""}>
+                    ${
+                        !state.running
+                        ? "disabled"
+                        : ""
+                    }>
+
                     STOP
+
+                </button>
+
+                <button
+                    class="control reset"
+                    onclick="resetTimer()">
+
+                    RESET
+
                 </button>
 
             </div>
@@ -1240,23 +1458,33 @@ function renderTimer(){
             <div class="segment-list">
 
                 <div class="segment-head">
+
                     <div>#</div>
                     <div>Segment</div>
-                    <div style="text-align:right">Zeit</div>
-                    <div style="text-align:right">Best</div>
-                    <div style="text-align:right">Diff</div>
+                    <div style="text-align:right">
+                        Zeit
+                    </div>
+                    <div style="text-align:right">
+                        Best
+                    </div>
+                    <div style="text-align:right">
+                        Diff
+                    </div>
+
                 </div>
 
                 ${
-                    project.segments.map((segment,index) =>
-                        renderSegment(
-                            project,
-                            segment,
-                            index,
-                            currentSegmentTime,
-                            currentBest
-                        )
-                    ).join("")
+                    project.segments
+                    .map(
+                        (segment,index) =>
+                            renderSegment(
+                                project,
+                                segment,
+                                index,
+                                currentSegmentTime
+                            )
+                    )
+                    .join("")
                 }
 
             </div>
@@ -1265,14 +1493,27 @@ function renderTimer(){
             <div class="timer-footer">
 
                 <div>
-                    Segment ${Math.min(state.currentSegment + 1, project.segments.length)}
-                    / ${project.segments.length}
+
+                    Segment
+                    ${
+                        Math.min(
+                            state.currentSegment + 1,
+                            project.segments.length
+                        )
+                    }
+                    /
+                    ${project.segments.length}
+
                 </div>
 
                 <div class="keyboard">
+
                     SPACE = Start / Split
-                    &nbsp;·&nbsp;
+                    ·
                     R = Reset
+                    ·
+                    Z = Undo
+
                 </div>
 
             </div>
@@ -1281,25 +1522,37 @@ function renderTimer(){
     `;
 }
 
-function renderSegment(project,segment,index,currentSegmentTime,currentBest){
+function renderSegment(
+    project,
+    segment,
+    index,
+    currentSegmentTime
+){
 
-    const time = state.segmentTimes[index];
+    const time =
+        state.segmentTimes[index] ?? 0;
 
     let diff = null;
 
-    if(time != null){
+    const best =
+        getBestSegment(
+            project,
+            index
+        );
 
-        const best = getBestSegment(project,index);
-
-        if(best != null){
-            diff = time - best;
-        }
+    if(best != null && time > 0){
+        diff = time - best;
     }
 
-    if(index === state.currentSegment && state.running){
-        diff = currentBest == null
+    if(
+        index === state.currentSegment &&
+        state.running
+    ){
+
+        diff =
+            best == null
             ? null
-            : currentSegmentTime - currentBest;
+            : currentSegmentTime - best;
     }
 
     const diffClass =
@@ -1312,42 +1565,63 @@ function renderSegment(project,segment,index,currentSegmentTime,currentBest){
         : "neutral";
 
     return `
-        <div class="segment ${
-            index === state.currentSegment && state.running
-            ? "current"
-            : time != null
-            ? "finished"
-            : ""
-        }">
+
+        <div class="
+            segment
+            ${
+                index === state.currentSegment &&
+                state.running
+                ? "current"
+                : time > 0
+                ? "finished"
+                : ""
+            }
+        ">
 
             <div class="segment-number">
+
                 ${index + 1}
+
             </div>
 
             <div class="segment-name">
+
                 ${escapeHTML(segment.name)}
+
             </div>
 
             <div class="segment-time">
+
                 ${
-                    index === state.currentSegment && state.running
+                    index === state.currentSegment &&
+                    state.running
+
                     ? formatTime(currentSegmentTime)
-                    : time == null
-                    ? "—"
+
                     : formatTime(time)
                 }
+
             </div>
 
             <div class="segment-best">
+
                 ${
-                    getBestSegment(project,index) == null
+                    best == null
                     ? "—"
-                    : formatTime(getBestSegment(project,index))
+                    : formatTime(best)
                 }
+
             </div>
 
-            <div class="segment-delta ${diffClass}">
-                ${diff == null ? "—" : formatDelta(diff)}
+            <div
+                class="segment-delta ${diffClass}">
+
+                ${
+                    diff == null
+                    ? "—"
+                    : formatDelta(diff)
+                }
+
             </div>
 
         </div>
@@ -1355,14 +1629,22 @@ function renderSegment(project,segment,index,currentSegmentTime,currentBest){
 }
 
 
-/* =========================================================
+/* =========================
    TIMER ENGINE
-   ========================================================= */
+========================= */
 
 function getCurrentElapsed(){
 
     if(state.running){
-        return state.elapsedBeforeStart + (performance.now() - state.startTime);
+
+        return (
+            state.elapsedBeforeStart +
+            (
+                performance.now() -
+                state.startTime
+            )
+        );
+
     }
 
     return state.elapsedBeforeStart;
@@ -1370,14 +1652,12 @@ function getCurrentElapsed(){
 
 function getCurrentSegmentElapsed(){
 
-    if(state.currentSegment === 0){
-        return getCurrentElapsed();
-    }
-
-    const previous = state.segmentTimes
+    const previous =
+        state.segmentTimes
         .slice(0,state.currentSegment)
         .reduce(
-            (sum,value) => sum + (value || 0),
+            (sum,value) =>
+                sum + (value || 0),
             0
         );
 
@@ -1389,85 +1669,114 @@ function getCurrentSegmentElapsed(){
 
 function startTimer(){
 
-    if(state.running || state.finished){
+    if(
+        state.running ||
+        state.finished
+    ){
         return;
     }
 
     state.running = true;
 
-    state.startTime = performance.now();
+    state.startTime =
+        performance.now();
 
     if(!state.runStartDate){
-        state.runStartDate = new Date().toISOString();
-    }
 
-    state.lastSplitTimestamp = performance.now();
+        state.runStartDate =
+            new Date().toISOString();
+
+    }
 
     startVisualTimer();
 
-    updateTimerButtons();
+    renderTimer();
 }
 
 function startVisualTimer(){
 
     stopVisualTimer();
 
-    timerInterval = setInterval(() => {
-
-        updateLiveDisplay();
-
-    },40);
+    timerInterval =
+        setInterval(
+            updateLiveDisplay,
+            40
+        );
 }
 
 function stopVisualTimer(){
 
     if(timerInterval){
-        clearInterval(timerInterval);
+
+        clearInterval(
+            timerInterval
+        );
+
         timerInterval = null;
+
     }
 }
 
 function updateLiveDisplay(){
 
-    const timeElement = document.getElementById("mainTimer");
+    const timeElement =
+        document.getElementById(
+            "mainTimer"
+        );
 
     if(!timeElement){
         return;
     }
 
     timeElement.textContent =
-        formatTime(getCurrentElapsed());
+        formatTime(
+            getCurrentElapsed()
+        );
 
     const segmentElement =
-        document.getElementById("currentSegmentDisplay");
+        document.getElementById(
+            "currentSegmentDisplay"
+        );
 
     if(segmentElement){
+
         segmentElement.textContent =
-            formatTime(getCurrentSegmentElapsed());
+            formatTime(
+                getCurrentSegmentElapsed()
+            );
+
     }
 
-    const project = getProject();
+    const project =
+        getProject();
 
     if(project){
 
         const best =
-            getBestSegment(project,state.currentSegment);
+            getBestSegment(
+                project,
+                state.currentSegment
+            );
 
         const deltaElement =
-            document.getElementById("currentDelta");
+            document.getElementById(
+                "currentDelta"
+            );
 
         if(deltaElement){
 
             if(best == null){
 
                 deltaElement.textContent = "—";
+
                 deltaElement.className =
                     "compare-value neutral";
 
             }else{
 
                 const delta =
-                    getCurrentSegmentElapsed() - best;
+                    getCurrentSegmentElapsed() -
+                    best;
 
                 deltaElement.textContent =
                     formatDelta(delta);
@@ -1486,32 +1795,10 @@ function updateLiveDisplay(){
     }
 }
 
-function updateTimerButtons(){
 
-    const start = document.getElementById("startButton");
-    const split = document.getElementById("splitButton");
-    const stop = document.getElementById("stopButton");
-
-    if(start){
-        start.disabled =
-            state.running || state.finished;
-    }
-
-    if(split){
-        split.disabled =
-            !state.running;
-    }
-
-    if(stop){
-        stop.disabled =
-            !state.running;
-    }
-}
-
-
-/* =========================================================
+/* =========================
    SPLIT
-   ========================================================= */
+========================= */
 
 function splitTimer(){
 
@@ -1519,39 +1806,53 @@ function splitTimer(){
         return;
     }
 
-    const project = getProject();
+    const project =
+        getProject();
 
     if(!project){
         return;
     }
 
-    const now = performance.now();
+    const now =
+        performance.now();
 
     const total =
         state.elapsedBeforeStart +
-        (now - state.startTime);
+        (
+            now -
+            state.startTime
+        );
 
     const previousSegments =
         state.segmentTimes
-            .slice(0,state.currentSegment)
-            .reduce(
-                (sum,value) => sum + (value || 0),
-                0
-            );
+        .slice(0,state.currentSegment)
+        .reduce(
+            (sum,value) =>
+                sum + (value || 0),
+            0
+        );
 
     const segmentTime =
-        Math.max(0,total - previousSegments);
+        Math.max(
+            0,
+            total - previousSegments
+        );
 
-    state.segmentTimes[state.currentSegment] =
-        segmentTime;
+    state.segmentTimes[
+        state.currentSegment
+    ] = segmentTime;
 
-    state.elapsedBeforeStart = total;
+    state.elapsedBeforeStart =
+        total;
 
     state.startTime = now;
 
     state.currentSegment++;
 
-    if(state.currentSegment >= project.segments.length){
+    if(
+        state.currentSegment >=
+        project.segments.length
+    ){
 
         finishRun();
 
@@ -1562,9 +1863,9 @@ function splitTimer(){
 }
 
 
-/* =========================================================
+/* =========================
    STOP
-   ========================================================= */
+========================= */
 
 function stopRun(){
 
@@ -1572,33 +1873,44 @@ function stopRun(){
         return;
     }
 
-    const project = getProject();
+    const project =
+        getProject();
 
     if(!project){
         return;
     }
 
-    const now = performance.now();
+    const now =
+        performance.now();
 
     const total =
         state.elapsedBeforeStart +
-        (now - state.startTime);
+        (
+            now -
+            state.startTime
+        );
 
     const previousSegments =
         state.segmentTimes
-            .slice(0,state.currentSegment)
-            .reduce(
-                (sum,value) => sum + (value || 0),
-                0
-            );
+        .slice(0,state.currentSegment)
+        .reduce(
+            (sum,value) =>
+                sum + (value || 0),
+            0
+        );
 
-    state.segmentTimes[state.currentSegment] =
-        Math.max(0,total - previousSegments);
+    state.segmentTimes[
+        state.currentSegment
+    ] =
+        Math.max(
+            0,
+            total - previousSegments
+        );
 
-    state.elapsedBeforeStart = total;
+    state.elapsedBeforeStart =
+        total;
 
     state.running = false;
-
     state.finished = true;
 
     stopVisualTimer();
@@ -1621,13 +1933,42 @@ function finishRun(){
 }
 
 
-/* =========================================================
+/* =========================
+   RESET
+========================= */
+
+function resetTimer(){
+
+    if(state.running){
+
+        if(!confirm(
+            "Den laufenden Run wirklich zurücksetzen?"
+        )){
+            return;
+        }
+    }
+
+    /*
+        Nur der aktuelle Lauf wird gelöscht.
+
+        Die Segmente selbst bleiben vollständig
+        unverändert.
+
+        Es wird auch kein History-Eintrag erstellt.
+    */
+
+    resetCurrentRun(true);
+}
+
+
+/* =========================
    SAVE RUN
-   ========================================================= */
+========================= */
 
 function saveRun(completed){
 
-    const project = getProject();
+    const project =
+        getProject();
 
     if(!project){
         return;
@@ -1635,41 +1976,61 @@ function saveRun(completed){
 
     const total =
         state.segmentTimes.reduce(
-            (sum,value) => sum + (value || 0),
+            (sum,value) =>
+                sum + (value || 0),
             0
         );
 
     const run = {
+
         id:createId(),
-        date:new Date().toISOString(),
+
+        date:
+            new Date().toISOString(),
+
         total:total,
-        segments:[...state.segmentTimes],
+
+        segments:[
+            ...state.segmentTimes
+        ],
+
         completed:completed
+
     };
 
     project.history.unshift(run);
 
     if(project.history.length > 100){
+
         project.history =
             project.history.slice(0,100);
+
     }
 
     saveDatabase();
 }
 
 
-/* =========================================================
+/* =========================
    BEST SEGMENTS
-   ========================================================= */
+========================= */
 
-function getBestSegment(project,index){
+function getBestSegment(
+    project,
+    index
+){
 
-    const values = project.history
+    const values =
+        project.history
         .filter(run => run.segments)
-        .map(run => run.segments[index])
-        .filter(value =>
-            typeof value === "number" &&
-            value > 0
+        .map(
+            run =>
+                run.segments[index]
+        )
+        .filter(
+            value =>
+                typeof value === "number" &&
+                value > 0
         );
 
     if(!values.length){
@@ -1680,27 +2041,9 @@ function getBestSegment(project,index){
 }
 
 
-/* =========================================================
-   RESET
-   ========================================================= */
-
-function resetTimer(){
-
-    if(state.running){
-
-        if(!confirm("Lauf wirklich zurücksetzen?")){
-            return;
-        }
-
-    }
-
-    resetCurrentRun(true);
-}
-
-
-/* =========================================================
+/* =========================
    UNDO
-   ========================================================= */
+========================= */
 
 function undoLastSplit(){
 
@@ -1712,9 +2055,10 @@ function undoLastSplit(){
         return;
     }
 
-    const index = state.currentSegment - 1;
+    const index =
+        state.currentSegment - 1;
 
-    state.segmentTimes[index] = null;
+    state.segmentTimes[index] = 0;
 
     state.currentSegment = index;
 
@@ -1724,91 +2068,202 @@ function undoLastSplit(){
 }
 
 
-/* =========================================================
-   SEGMENT MANAGEMENT
-   ========================================================= */
+/* =========================
+   SEGMENTS
+========================= */
 
 function manageSegments(){
 
     if(state.running){
-        alert("Segmente können während eines laufenden Runs nicht bearbeitet werden.");
+
+        alert(
+            "Segmente können während eines laufenden Runs nicht bearbeitet werden."
+        );
+
         return;
     }
 
-    const project = getProject();
+    const project =
+        getProject();
 
     if(!project){
         return;
     }
 
-    document.getElementById("modalRoot").innerHTML = `
-        <div class="modal-overlay" onclick="closeModal(event)">
+    renderSegmentEditor();
+}
 
-            <div class="modal"
+
+/*
+    Ganz wichtig:
+
+    Bevor das Modal neu gerendert wird,
+    werden die aktuell eingegebenen Namen
+    aus den Input-Feldern übernommen.
+
+    Dadurch gehen Namen beim Hinzufügen
+    eines weiteren Segments nicht mehr verloren.
+*/
+
+function collectSegmentEditorNames(){
+
+    const project =
+        getProject();
+
+    if(!project){
+        return;
+    }
+
+    project.segments.forEach(segment => {
+
+        const input =
+            document.getElementById(
+                "segmentInput_" +
+                segment.id
+            );
+
+        if(input){
+
+            segment.name =
+                input.value.trim() ||
+                "Segment";
+
+        }
+
+    });
+}
+
+function renderSegmentEditor(){
+
+    const project =
+        getProject();
+
+    if(!project){
+        return;
+    }
+
+    document.getElementById(
+        "modalRoot"
+    ).innerHTML = `
+
+        <div
+            class="modal-overlay"
+            onclick="closeModal(event)">
+
+            <div
+                class="modal"
                 style="max-width:650px"
                 onclick="event.stopPropagation()">
 
-                <h2>Segmente</h2>
+                <h2>
+                    Segmente
+                </h2>
 
                 <div id="segmentEditor">
 
-                    ${project.segments.map((segment,index) => `
+                    ${
+                        project.segments
+                        .map(
+                            (segment,index) => `
 
-                        <div style="
-                            display:grid;
-                            grid-template-columns:35px 1fr auto auto auto;
-                            gap:6px;
-                            align-items:center;
-                            margin-bottom:7px;
-                        ">
+                            <div style="
+                                display:grid;
+                                grid-template-columns:
+                                    35px
+                                    1fr
+                                    auto
+                                    auto
+                                    auto;
+                                gap:6px;
+                                align-items:center;
+                                margin-bottom:7px;
+                            ">
 
-                            <div style="color:var(--muted)">
-                                ${index + 1}
+                                <div style="
+                                    color:var(--muted)
+                                ">
+
+                                    ${index + 1}
+
+                                </div>
+
+                                <input
+                                    id="
+                                        segmentInput_${segment.id}
+                                    "
+                                    value="
+                                        ${escapeAttribute(segment.name)}
+                                    "
+                                    style="
+                                        width:100%;
+                                        padding:9px;
+                                        background:#080b0e;
+                                        color:var(--text);
+                                        border:1px solid var(--border);
+                                        border-radius:6px;
+                                    "
+                                >
+
+                                <button
+                                    class="btn small"
+                                    onclick="
+                                        moveSegment(
+                                            '${segment.id}',
+                                            -1
+                                        )
+                                    ">
+
+                                    ↑
+
+                                </button>
+
+                                <button
+                                    class="btn small"
+                                    onclick="
+                                        moveSegment(
+                                            '${segment.id}',
+                                            1
+                                        )
+                                    ">
+
+                                    ↓
+
+                                </button>
+
+                                <button
+                                    class="
+                                        btn
+                                        small
+                                        danger
+                                    "
+                                    onclick="
+                                        removeSegment(
+                                            '${segment.id}'
+                                        )
+                                    ">
+
+                                    ×
+
+                                </button>
+
                             </div>
-
-                            <input
-                                id="segmentInput_${segment.id}"
-                                value="${escapeAttribute(segment.name)}"
-                                style="
-                                    width:100%;
-                                    padding:9px;
-                                    background:#080b0e;
-                                    color:var(--text);
-                                    border:1px solid var(--border);
-                                    border-radius:6px;
-                                "
-                            >
-
-                            <button
-                                class="btn small"
-                                onclick="moveSegment('${segment.id}',-1)">
-                                ↑
-                            </button>
-
-                            <button
-                                class="btn small"
-                                onclick="moveSegment('${segment.id}',1)">
-                                ↓
-                            </button>
-
-                            <button
-                                class="btn small danger"
-                                onclick="removeSegment('${segment.id}')">
-                                ×
-                            </button>
-
-                        </div>
-
-                    `).join("")}
+                        `
+                        )
+                        .join("")
+                    }
 
                 </div>
 
                 <div style="margin-top:12px">
+
                     <button
                         class="btn"
                         onclick="addSegment()">
+
                         + Segment hinzufügen
+
                     </button>
+
                 </div>
 
                 <div class="modal-actions">
@@ -1816,13 +2271,17 @@ function manageSegments(){
                     <button
                         class="btn"
                         onclick="closeModal()">
+
                         Schließen
+
                     </button>
 
                     <button
                         class="btn primary"
                         onclick="saveSegmentNames()">
+
                         Speichern
+
                     </button>
 
                 </div>
@@ -1835,26 +2294,7 @@ function manageSegments(){
 
 function saveSegmentNames(){
 
-    const project = getProject();
-
-    if(!project){
-        return;
-    }
-
-    project.segments.forEach(segment => {
-
-        const input =
-            document.getElementById(
-                "segmentInput_" + segment.id
-            );
-
-        if(input){
-            segment.name =
-                input.value.trim() ||
-                "Segment";
-        }
-
-    });
+    collectSegmentEditorNames();
 
     saveDatabase();
 
@@ -1867,37 +2307,63 @@ function saveSegmentNames(){
 
 function addSegment(){
 
-    const project = getProject();
+    /*
+        HIER WAR DER FEHLER:
+
+        Die bisher eingegebenen Namen waren nur
+        in den HTML-Inputs und noch nicht in der
+        Datenbank.
+
+        Deshalb werden sie jetzt VOR dem Hinzufügen
+        eines neuen Segments gespeichert.
+    */
+
+    collectSegmentEditorNames();
+
+    const project =
+        getProject();
 
     if(!project){
         return;
     }
 
     project.segments.push({
+
         id:createId(),
+
         name:"Neues Segment"
+
     });
 
     saveDatabase();
 
-    manageSegments();
+    renderSegmentEditor();
 }
 
 function removeSegment(id){
 
-    const project = getProject();
+    collectSegmentEditorNames();
+
+    const project =
+        getProject();
 
     if(!project){
         return;
     }
 
     if(project.segments.length <= 1){
-        alert("Ein Speedrun muss mindestens ein Segment besitzen.");
+
+        alert(
+            "Ein Speedrun muss mindestens ein Segment besitzen."
+        );
+
         return;
     }
 
     const segment =
-        project.segments.find(s => s.id === id);
+        project.segments.find(
+            s => s.id === id
+        );
 
     if(!segment){
         return;
@@ -1912,25 +2378,36 @@ function removeSegment(id){
     }
 
     project.segments =
-        project.segments.filter(s => s.id !== id);
+        project.segments.filter(
+            s => s.id !== id
+        );
 
     saveDatabase();
 
-    manageSegments();
+    renderSegmentEditor();
 }
 
-function moveSegment(id,direction){
+function moveSegment(
+    id,
+    direction
+){
 
-    const project = getProject();
+    collectSegmentEditorNames();
+
+    const project =
+        getProject();
 
     if(!project){
         return;
     }
 
     const index =
-        project.segments.findIndex(s => s.id === id);
+        project.segments.findIndex(
+            s => s.id === id
+        );
 
-    const newIndex = index + direction;
+    const newIndex =
+        index + direction;
 
     if(
         index < 0 ||
@@ -1951,56 +2428,87 @@ function moveSegment(id,direction){
 
     saveDatabase();
 
-    manageSegments();
+    renderSegmentEditor();
 }
 
 
-/* =========================================================
+/* =========================
    HISTORY
-   ========================================================= */
+========================= */
 
 function showHistory(){
 
     if(state.running){
-        alert("Beende den aktuellen Lauf zuerst.");
+
+        alert(
+            "Beende den aktuellen Run zuerst."
+        );
+
         return;
     }
 
-    const project = getProject();
+    const project =
+        getProject();
 
     if(!project){
         return;
     }
 
-    document.getElementById("modalRoot").innerHTML = `
+    document.getElementById(
+        "modalRoot"
+    ).innerHTML = `
 
-        <div class="modal-overlay" onclick="closeModal(event)">
+        <div
+            class="modal-overlay"
+            onclick="closeModal(event)">
 
-            <div class="modal"
+            <div
+                class="modal"
                 style="max-width:700px"
                 onclick="event.stopPropagation()">
 
-                <h2>Run History</h2>
+                <h2>
+                    Run History
+                </h2>
 
                 ${
                     project.history.length
+
                     ?
+
                     `
                     <div class="history">
 
-                        <div class="history-row header-row">
+                        <div
+                            class="
+                                history-row
+                                header-row
+                            ">
+
                             <div>#</div>
-                            <div>Zeit</div>
-                            <div>Datum</div>
-                            <div>Status</div>
+
+                            <div>
+                                Zeit
+                            </div>
+
+                            <div>
+                                Datum
+                            </div>
+
+                            <div>
+                                Status
+                            </div>
+
                         </div>
 
                         ${
                             project.history
                             .slice(0,30)
-                            .map((run,index) => `
+                            .map(
+                                (run,index) => `
 
-                                <div class="history-row">
+                                <div
+                                    class="history-row">
 
                                     <div>
                                         ${index + 1}
@@ -2015,24 +2523,32 @@ function showHistory(){
                                     </div>
 
                                     <div>
+
                                         ${
                                             run.completed
                                             ? "✓ Komplett"
                                             : "Gestoppt"
                                         }
+
                                     </div>
 
                                 </div>
 
-                            `).join("")
+                            `
+                            )
+                            .join("")
                         }
 
                     </div>
                     `
+
                     :
-                    `<div class="empty">
+
+                    `
+                    <div class="empty">
                         Noch keine Runs.
-                    </div>`
+                    </div>
+                    `
                 }
 
                 <div class="modal-actions">
@@ -2040,13 +2556,17 @@ function showHistory(){
                     <button
                         class="btn danger"
                         onclick="clearHistory()">
+
                         History löschen
+
                     </button>
 
                     <button
                         class="btn"
                         onclick="closeModal()">
+
                         Schließen
+
                     </button>
 
                 </div>
@@ -2059,13 +2579,16 @@ function showHistory(){
 
 function clearHistory(){
 
-    const project = getProject();
+    const project =
+        getProject();
 
     if(!project){
         return;
     }
 
-    if(!confirm("Alle bisherigen Runs löschen?")){
+    if(!confirm(
+        "Alle bisherigen Runs löschen?"
+    )){
         return;
     }
 
@@ -2094,14 +2617,16 @@ function formatDate(date){
         );
 
     }catch{
+
         return "—";
+
     }
 }
 
 
-/* =========================================================
+/* =========================
    NAVIGATION
-   ========================================================= */
+========================= */
 
 function goHome(){
 
@@ -2112,7 +2637,6 @@ function goHome(){
         )){
             return;
         }
-
     }
 
     stopVisualTimer();
@@ -2121,27 +2645,36 @@ function goHome(){
 }
 
 
-/* =========================================================
+/* =========================
    SETTINGS
-   ========================================================= */
+========================= */
 
 function showSettings(){
 
-    document.getElementById("modalRoot").innerHTML = `
+    document.getElementById(
+        "modalRoot"
+    ).innerHTML = `
 
-        <div class="modal-overlay" onclick="closeModal(event)">
+        <div
+            class="modal-overlay"
+            onclick="closeModal(event)">
 
-            <div class="modal"
+            <div
+                class="modal"
                 onclick="event.stopPropagation()">
 
-                <h2>Einstellungen</h2>
+                <h2>
+                    Einstellungen
+                </h2>
 
                 <p style="
                     color:var(--muted);
                     line-height:1.5;
                 ">
-                    Dieser Speedrun-Timer speichert deine
-                    Speedruns und Run-History direkt im Browser.
+
+                    Deine Speedruns und Run-History
+                    werden direkt im Browser gespeichert.
+
                 </p>
 
                 <div style="
@@ -2153,7 +2686,9 @@ function showSettings(){
                     <button
                         class="btn danger"
                         onclick="deleteAllData()">
+
                         Alle Daten löschen
+
                     </button>
 
                 </div>
@@ -2163,7 +2698,9 @@ function showSettings(){
                     <button
                         class="btn"
                         onclick="closeModal()">
+
                         Schließen
+
                     </button>
 
                 </div>
@@ -2182,7 +2719,9 @@ function deleteAllData(){
         return;
     }
 
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
 
     database = {
         projects:[]
@@ -2194,87 +2733,106 @@ function deleteAllData(){
 }
 
 
-/* =========================================================
+/* =========================
    KEYBOARD
-   ========================================================= */
+========================= */
 
-document.addEventListener("keydown",event => {
+document.addEventListener(
+    "keydown",
+    event => {
 
-    if(
-        event.target &&
-        (
-            event.target.tagName === "INPUT" ||
-            event.target.tagName === "TEXTAREA"
-        )
-    ){
-        return;
-    }
-
-    if(event.code === "Space"){
-
-        event.preventDefault();
-
-        if(state.page !== "timer"){
+        if(
+            event.target &&
+            (
+                event.target.tagName === "INPUT" ||
+                event.target.tagName === "TEXTAREA"
+            )
+        ){
             return;
         }
 
-        if(state.running){
-            splitTimer();
-        }else if(!state.finished){
-            startTimer();
+        if(event.code === "Space"){
+
+            event.preventDefault();
+
+            if(state.page !== "timer"){
+                return;
+            }
+
+            if(state.running){
+
+                splitTimer();
+
+            }else if(!state.finished){
+
+                startTimer();
+
+            }
+
+        }
+
+        if(
+            event.key.toLowerCase() === "r" &&
+            state.page === "timer"
+        ){
+
+            resetTimer();
+
+        }
+
+        if(
+            event.key.toLowerCase() === "z" &&
+            state.page === "timer"
+        ){
+
+            undoLastSplit();
+
+        }
+
+        if(event.key === "Escape"){
+
+            closeModal();
+
         }
 
     }
-
-    if(
-        event.key.toLowerCase() === "r" &&
-        state.page === "timer"
-    ){
-
-        resetTimer();
-
-    }
-
-    if(
-        event.key.toLowerCase() === "z" &&
-        state.page === "timer"
-    ){
-
-        undoLastSplit();
-
-    }
-
-    if(event.key === "Escape"){
-
-        closeModal();
-
-    }
-
-});
+);
 
 
-/* =========================================================
+/* =========================
    HEADER
-   ========================================================= */
+========================= */
 
-document.getElementById("homeBtn")
-    .addEventListener("click",() => {
+document
+    .getElementById("homeBtn")
+    .addEventListener(
+        "click",
+        () => {
 
-        if(state.page === "timer"){
-            goHome();
-        }else{
-            renderHome();
+            if(state.page === "timer"){
+
+                goHome();
+
+            }else{
+
+                renderHome();
+
+            }
+
         }
+    );
 
-    });
+document
+    .getElementById("settingsBtn")
+    .addEventListener(
+        "click",
+        showSettings
+    );
 
-document.getElementById("settingsBtn")
-    .addEventListener("click",showSettings);
 
-
-/* =========================================================
+/* =========================
    HELPERS
-   ========================================================= */
+========================= */
 
 function escapeHTML(value){
 
@@ -2292,13 +2850,13 @@ function escapeAttribute(value){
 }
 
 
-/* =========================================================
+/* =========================
    START
-   ========================================================= */
+========================= */
 
 renderHome();
 
 </script>
 
 </body>
-  </html>
+</html>
