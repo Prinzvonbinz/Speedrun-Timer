@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Speedrun Timer</title>
+
+<style>
+:root{
+    --bg:#080a0d;
+    --panel:#11151a;
+    --panel2:#171c22;
+    --border:#252c34;
+    --text:#e8edf2;
+    --muted:#7f8a96;
+    --accent:#4da3ff;
+    --green:#48d597;
+    --red:#ff6262;
+    --yellow:#e8c95b;
+}
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+button,input{
+    font:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+.app{
+    width:100%;
+    min-height:100vh;
+}
+
+/* HEADER */
+
+.header{
+    height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    border-bottom:1px solid var(--border);
+    background:#0b0e12;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.logo{
+    font-family:Consolas,Monaco,"Courier New",monospace;
+    font-weight:800;
+    font-size:20px;
+    letter-spacing:-1px;
+}
+
+.logo span{
+    color:var(--accent);
+}
+
+.header-actions{
+    display:flex;
+    gap:8px;
+}
+
+/* BUTTONS */
+
+.btn{
+    background:var(--panel2);
+    color:var(--text);
+    border:1px solid var(--border);
+    padding:9px 13px;
+    border-radius:7px;
+    transition:.15s;
+}
+
+.btn:hover{
+    background:#20262e;
+}
+
+.btn:active{
+    transform:scale(.97);
+}
+
+.btn.primary{
+    background:var(--accent);
+    color:#07101a;
+    border-color:var(--accent);
+    font-weight:700;
+}
+
+.btn.danger{
+    color:#ff8a8a;
+}
+
+.btn.small{
+    padding:6px 9px;
+    font-size:13px;
+}
+
+/* MAIN */
+
+.main{
+    max-width:1100px;
+    width:calc(100% - 28px);
+    margin:0 auto;
+    padding:28px 0 50px;
+}
+
+.page-title{
+    margin-bottom:20px;
+}
+
+.page-title h1{
+    margin:0 0 5px;
+    font-size:28px;
+}
+
+.page-title p{
+    margin:0;
+    color:var(--muted);
+}
+
+/* PROJECT GRID */
+
+.project-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:14px;
+}
+
+.project-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:17px;
+    transition:.15s;
+}
+
+.project-card:hover{
+    border-color:#3a4652;
+    transform:translateY(-1px);
+}
+
+.project-name{
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.project-info{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.card-buttons{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+/* EMPTY */
+
+.empty{
+    border:1px dashed #303841;
+    border-radius:10px;
+    padding:35px 20px;
+    text-align:center;
+    color:var(--muted);
+}
+
+/* TIMER */
+
+.timer-page{
+    max-width:1200px;
+    width:calc(100% - 20px);
+    margin:0 auto;
+    padding:15px 0 35px;
+}
+
+.timer-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.timer-title{
+    min-width:0;
+}
+
+.timer-title h1{
+    font-family:Consolas,Monaco,"Courier New",monospace;
+    font-size:21px;
+    margin:0;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.timer-title small{
+    color:var(--muted);
+}
+
+.timer-actions{
+    display:flex;
+    gap:7px;
+    flex-shrink:0;
+}
+
+.timer-display{
+    background:#090c10;
+    border:1px solid var(--border);
+    border-radius:10px;
+    text-align:center;
+    padding:18px 10px 16px;
+    margin-bottom:12px;
+}
+
+.big-time{
+    font-family:Consolas,Monaco,"Courier New",monospace;
+    font-size:clamp(48px,11vw,88px);
+    font-weight:700;
+    letter-spacing:-3px;
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+}
+
+.run-status{
+    margin-top:9px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.timer-controls{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.control{
+    height:55px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:var(--panel);
+    color:var(--text);
+    font-weight:700;
+    font-size:15px;
+}
+
+.control.start{
+    background:var(--green);
+    color:#06140e;
+    border-color:var(--green);
+}
+
+.control.split{
+    background:var(--accent);
+    color:#06101a;
+    border-color:var(--accent);
+}
+
+.control.stop{
+    background:#252a30;
+}
+
+.control:disabled{
+    opacity:.35;
+    cursor:not-allowed;
+}
+
+/* COMPARISON */
+
+.compare-bar{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin-bottom:12px;
+    overflow:hidden;
+}
+
+.compare-item{
+    padding:10px;
+    text-align:center;
+    border-right:1px solid var(--border);
+}
+
+.compare-item:last-child{
+    border-right:0;
+}
+
+.compare-label{
+    font-size:11px;
+    color:var(--muted);
+    text-transform:uppercase;
+    margin-bottom:4px;
+}
+
+.compare-value{
+    font-family:Consolas,Monaco,"Courier New",monospace;
+    font-size:16px;
+    font-weight:700;
+}
+
+/* SEGMENTS */
+
+.segment-list{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:9px;
+    overflow:hidden;
+}
+
+.segment-head{
+    display:grid;
+    grid-template-columns:42px minmax(120px,1fr) 120px 120px 110px;
+    gap:8px;
+    padding:9px 12px;
+    color:var(--muted);
+    font-size:11px;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--border);
+}
+
+.segment{
+    display:grid;
+    grid-template-columns:42px minmax(120px,1fr) 120px 120px 110px;
+    gap:8px;
+    align-items:center;
+    min-height:50px;
+    padding:7px 12px;
+    border-bottom:1px solid #1c2228;
+    font-family:Consolas,Monaco,"Courier New",monospace;
+    font-size:14px;
+}
+
+.segment:last-child{
+    border-bottom:0;
+}
+
+.segment.current{
+    background:#151b22;
+}
+
+.segment.finished{
+    background:#10151a;
+}
+
+.segment-number{
+    color:var(--muted);
+}
+
+.segment-name{
+    font-family:Arial,Helvetica,sans-serif;
+    font-weight:600;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.segment-time,
+.segment-best,
+.segment-delta{
+    text-align:right;
+    font-variant-numeric:tabular-nums;
+}
+
+.good{
+    color:var(--green);
+}
+
+.bad{
+    color:var(--red);
+}
+
+.neutral{
+    color:var(--muted);
+}
+
+.segment-menu{
+    display:flex;
+    justify-content:flex-end;
+    gap:4px;
+}
+
+.icon-btn{
+    background:transparent;
+    color:var(--muted);
+    border:1px solid transparent;
+    border-radius:5px;
+    padding:5px 7px;
+}
+
+.icon-btn:hover{
+    background:#20262d;
+    color:var(--text);
+}
+
+/* FOOTER TIMER */
+
+.timer-footer{
+    margin-top:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.keyboard{
+    font-family:Consolas,Monaco,"Courier New",monospace;
+}
+
+/* MODALS */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    z-index:100;
+}
+
+.modal{
+    width:100%;
+    max-width:450px;
+    background:#101419;
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+.modal h2{
+    margin:0 0 15px;
+}
+
+.field{
+    margin-bottom:14px;
+}
+
+.field label{
+    display:block;
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:6px;
+}
+
+.field input{
+    width:100%;
+    padding:11px 12px;
+    background:#080b0e;
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:7px;
+    outline:none;
+}
+
+.field input:focus{
+    border-color:var(--accent);
+}
+
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:18px;
+}
+
+/* HISTORY */
+
+.history{
+    margin-top:14px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:9px;
+    overflow:hidden;
+}
+
+.history-title{
+    padding:12px 14px;
+    font-weight:700;
+    border-bottom:1px solid var(--border);
+}
+
+.history-row{
+    display:grid;
+    grid-template-columns:45px 1fr 1fr 1fr;
+    gap:10px;
+    padding:10px 14px;
+    border-bottom:1px solid #1c2228;
+    font-family:Consolas,Monaco,"Courier New",monospace;
+    font-size:13px;
+}
+
+.history-row:last-child{
+    border-bottom:0;
+}
+
+.history-row.header-row{
+    color:var(--muted);
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:720px){
+
+    .main{
+        padding-top:20px;
+    }
+
+    .segment-head{
+        display:none;
+    }
+
+    .segment{
+        grid-template-columns:27px 1fr auto;
+        grid-template-areas:
+            "num name menu"
+            ". time delta";
+        row-gap:3px;
+        padding:10px 11px;
+    }
+
+    .segment-number{
+        grid-area:num;
+    }
+
+    .segment-name{
+        grid-area:name;
+    }
+
+    .segment-menu{
+        grid-area:menu;
+    }
+
+    .segment-time{
+        grid-area:time;
+        text-align:left;
+        margin-left:27px;
+    }
+
+    .segment-best{
+        display:none;
+    }
+
+    .segment-delta{
+        grid-area:delta;
+    }
+
+    .timer-top{
+        align-items:flex-start;
+    }
+
+    .timer-actions{
+        flex-direction:column;
+    }
+
+    .timer-actions .btn{
+        padding:7px 9px;
+    }
+
+    .history-row{
+        grid-template-columns:35px 1fr 1fr;
+    }
+
+    .history-row div:nth-child(4){
+        display:none;
+    }
+}
+
+@media(max-width:430px){
+
+    .header{
+        padding:0 11px;
+    }
+
+    .logo{
+        font-size:17px;
+    }
+
+    .main{
+        width:calc(100% - 20px);
+    }
+
+    .timer-page{
+        width:calc(100% - 12px);
+    }
+
+    .compare-item{
+        padding:8px 4px;
+    }
+
+    .compare-value{
+        font-size:13px;
+    }
+
+    .big-time{
+        font-size:48px;
+    }
+}
+
+/* HIDDEN */
+
+.hidden{
+    display:none !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+    <div class="logo">SPEED<span>RUN</span></div>
+
+    <div class="header-actions">
+        <button class="btn small" id="homeBtn">Runs</button>
+        <button class="btn small" id="settingsBtn">⚙</button>
+    </div>
+</header>
+
+<main id="app"></main>
+
+</div>
+
+<div id="modalRoot"></div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   SPEEDRUN TIMER
+   ========================================================= */
+
+const STORAGE_KEY = "speedrun_timer_v1";
+
+let database = loadDatabase();
+
+let state = {
+    page: "home",
+    projectId: null,
+    running: false,
+    finished: false,
+    startTime: 0,
+    elapsedBeforeStart: 0,
+    lastSplitTimestamp: 0,
+    currentSegment: 0,
+    segmentTimes: [],
+    runStartDate: null
+};
+
+let timerInterval = null;
+
+
+/* =========================================================
+   DATABASE
+   ========================================================= */
+
+function loadDatabase(){
+    try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+
+        if(!raw){
+            return {
+                projects: []
+            };
+        }
+
+        const parsed = JSON.parse(raw);
+
+        if(!parsed.projects){
+            parsed.projects = [];
+        }
+
+        return parsed;
+
+    }catch(error){
+        return {
+            projects: []
+        };
+    }
+}
+
+function saveDatabase(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(database));
+}
+
+function createId(){
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function getProject(){
+    return database.projects.find(p => p.id === state.projectId);
+}
+
+
+/* =========================================================
+   TIME
+   ========================================================= */
+
+function formatTime(ms, decimals = 2){
+
+    if(ms == null || isNaN(ms)){
+        return "--:--.--";
+    }
+
+    ms = Math.max(0, ms);
+
+    const totalSeconds = Math.floor(ms / 1000);
+
+    const milliseconds = Math.floor(ms % 1000);
+
+    const hours = Math.floor(totalSeconds / 3600);
+
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    const seconds = totalSeconds % 60;
+
+    const hundredths = Math.floor(milliseconds / 10);
+
+    if(hours > 0){
+        return (
+            String(hours).padStart(2,"0") +
+            ":" +
+            String(minutes).padStart(2,"0") +
+            ":" +
+            String(seconds).padStart(2,"0") +
+            "." +
+            String(hundredths).padStart(2,"0")
+        );
+    }
+
+    return (
+        String(minutes).padStart(2,"0") +
+        ":" +
+        String(seconds).padStart(2,"0") +
+        "." +
+        String(hundredths).padStart(2,"0")
+    );
+}
+
+function formatDelta(ms){
+
+    if(ms == null || isNaN(ms)){
+        return "—";
+    }
+
+    const sign = ms > 0 ? "+" : ms < 0 ? "-" : "";
+
+    return sign + formatTime(Math.abs(ms));
+}
+
+
+/* =========================================================
+   HOME
+   ========================================================= */
+
+function renderHome(){
+
+    state.page = "home";
+
+    stopVisualTimer();
+
+    const projects = database.projects;
+
+    document.getElementById("app").innerHTML = `
+        <div class="main">
+
+            <div class="page-title">
+                <h1>Meine Runs</h1>
+                <p>Wähle einen Speedrun aus oder erstelle einen neuen.</p>
+            </div>
+
+            <div style="margin-bottom:16px">
+                <button class="btn primary" onclick="openProjectModal()">
+                    + Neuer Speedrun
+                </button>
+            </div>
+
+            ${
+                projects.length
+                ?
+                `<div class="project-grid">
+                    ${projects.map(renderProjectCard).join("")}
+                </div>`
+                :
+                `<div class="empty">
+                    <div style="font-size:30px;margin-bottom:10px">⏱</div>
+                    Noch keine Speedruns vorhanden.<br>
+                    Erstelle deinen ersten Run.
+                </div>`
+            }
+
+        </div>
+    `;
+}
+
+function renderProjectCard(project){
+
+    const pb = getProjectPB(project);
+
+    return `
+        <div class="project-card">
+
+            <div class="project-name">
+                ${escapeHTML(project.name)}
+            </div>
+
+            <div class="project-info">
+                ${project.segments.length} Segmente
+                · ${project.history.length} Runs
+                <br>
+                PB:
+                <strong>
+                    ${pb == null ? "Noch keine Zeit" : formatTime(pb)}
+                </strong>
+            </div>
+
+            <div class="card-buttons">
+
+                <button class="btn primary small"
+                    onclick="openTimer('${project.id}')">
+                    Start
+                </button>
+
+                <button class="btn small"
+                    onclick="openProjectModal('${project.id}')">
+                    Bearbeiten
+                </button>
+
+                <button class="btn danger small"
+                    onclick="deleteProject('${project.id}')">
+                    Löschen
+                </button>
+
+            </div>
+
+        </div>
+    `;
+}
+
+function getProjectPB(project){
+
+    if(!project.history.length){
+        return null;
+    }
+
+    const valid = project.history
+        .map(r => r.total)
+        .filter(v => typeof v === "number");
+
+    if(!valid.length){
+        return null;
+    }
+
+    return Math.min(...valid);
+}
+
+
+/* =========================================================
+   PROJECT MODAL
+   ========================================================= */
+
+function openProjectModal(projectId = null){
+
+    const project = projectId
+        ? database.projects.find(p => p.id === projectId)
+        : null;
+
+    document.getElementById("modalRoot").innerHTML = `
+        <div class="modal-overlay" onclick="closeModal(event)">
+
+            <div class="modal" onclick="event.stopPropagation()">
+
+                <h2>
+                    ${project ? "Speedrun bearbeiten" : "Neuer Speedrun"}
+                </h2>
+
+                <div class="field">
+                    <label>Name</label>
+                    <input
+                        id="projectNameInput"
+                        maxlength="60"
+                        value="${project ? escapeAttribute(project.name) : ""}"
+                        placeholder="z. B. Super Game Any%"
+                        autofocus
+                    >
+                </div>
+
+                <div class="modal-actions">
+
+                    <button class="btn" onclick="closeModal()">
+                        Abbrechen
+                    </button>
+
+                    <button class="btn primary"
+                        onclick="saveProjectModal('${projectId || ""}')">
+                        Speichern
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    `;
+
+    setTimeout(() => {
+        const input = document.getElementById("projectNameInput");
+        if(input) input.focus();
+    },50);
+}
+
+function saveProjectModal(projectId){
+
+    const input = document.getElementById("projectNameInput");
+
+    const name = input.value.trim();
+
+    if(!name){
+        input.focus();
+        return;
+    }
+
+    if(projectId){
+
+        const project = database.projects.find(p => p.id === projectId);
+
+        if(project){
+            project.name = name;
+        }
+
+    }else{
+
+        database.projects.push({
+            id:createId(),
+            name:name,
+            segments:[
+                {
+                    id:createId(),
+                    name:"Start"
+                }
+            ],
+            history:[]
+        });
+
+    }
+
+    saveDatabase();
+
+    closeModal();
+
+    renderHome();
+}
+
+function closeModal(event){
+
+    if(event && event.target !== event.currentTarget){
+        return;
+    }
+
+    document.getElementById("modalRoot").innerHTML = "";
+}
+
+
+/* =========================================================
+   DELETE PROJECT
+   ========================================================= */
+
+function deleteProject(id){
+
+    const project = database.projects.find(p => p.id === id);
+
+    if(!project){
+        return;
+    }
+
+    if(!confirm(
+        'Speedrun "' +
+        project.name +
+        '" wirklich löschen? Alle Runs werden gelöscht.'
+    )){
+        return;
+    }
+
+    database.projects = database.projects.filter(p => p.id !== id);
+
+    saveDatabase();
+
+    renderHome();
+}
+
+
+/* =========================================================
+   TIMER OPEN
+   ========================================================= */
+
+function openTimer(projectId){
+
+    const project = database.projects.find(p => p.id === projectId);
+
+    if(!project){
+        return;
+    }
+
+    state.page = "timer";
+    state.projectId = projectId;
+
+    resetCurrentRun(false);
+
+    renderTimer();
+}
+
+function resetCurrentRun(render = true){
+
+    stopVisualTimer();
+
+    state.running = false;
+    state.finished = false;
+    state.startTime = 0;
+    state.elapsedBeforeStart = 0;
+    state.lastSplitTimestamp = 0;
+    state.currentSegment = 0;
+    state.segmentTimes = [];
+    state.runStartDate = null;
+
+    const project = getProject();
+
+    if(project){
+        state.segmentTimes = project.segments.map(() => null);
+    }
+
+    if(render){
+        renderTimer();
+    }
+}
+
+
+/* =========================================================
+   TIMER RENDER
+   ========================================================= */
+
+function renderTimer(){
+
+    const project = getProject();
+
+    if(!project){
+        renderHome();
+        return;
+    }
+
+    const total = getCurrentElapsed();
+
+    const pb = getProjectPB(project);
+
+    const currentSegmentTime = getCurrentSegmentElapsed();
+
+    const currentBest =
+        project.segments[state.currentSegment]
+        ? getBestSegment(project,state.currentSegment)
+        : null;
+
+    const delta =
+        currentBest == null
+        ? null
+        : currentSegmentTime - currentBest;
+
+    document.getElementById("app").innerHTML = `
+
+        <div class="timer-page">
+
+            <div class="timer-top">
+
+                <div class="timer-title">
+
+                    <h1>${escapeHTML(project.name)}</h1>
+
+                    <small>
+                        ${project.segments.length} Segmente
+                        · PB ${pb == null ? "--:--.--" : formatTime(pb)}
+                    </small>
+
+                </div>
+
+                <div class="timer-actions">
+
+                    <button class="btn small"
+                        onclick="manageSegments()">
+                        Segmente
+                    </button>
+
+                    <button class="btn small"
+                        onclick="showHistory()">
+                        History
+                    </button>
+
+                    <button class="btn small"
+                        onclick="goHome()">
+                        Runs
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="timer-display">
+
+                <div class="big-time" id="mainTimer">
+                    ${formatTime(total)}
+                </div>
+
+                <div class="run-status" id="runStatus">
+                    ${
+                        state.finished
+                        ? "Run beendet"
+                        : state.running
+                        ? "Läuft"
+                        : "Bereit"
+                    }
+                </div>
+
+            </div>
+
+
+            <div class="compare-bar">
+
+                <div class="compare-item">
+
+                    <div class="compare-label">
+                        Segment
+                    </div>
+
+                    <div class="compare-value" id="currentSegmentDisplay">
+                        ${formatTime(currentSegmentTime)}
+                    </div>
+
+                </div>
+
+
+                <div class="compare-item">
+
+                    <div class="compare-label">
+                        Bestes Segment
+                    </div>
+
+                    <div class="compare-value">
+                        ${
+                            currentBest == null
+                            ? "--:--.--"
+                            : formatTime(currentBest)
+                        }
+                    </div>
+
+                </div>
+
+
+                <div class="compare-item">
+
+                    <div class="compare-label">
+                        Vergleich
+                    </div>
+
+                    <div
+                        class="compare-value ${
+                            delta == null
+                            ? "neutral"
+                            : delta < 0
+                            ? "good"
+                            : delta > 0
+                            ? "bad"
+                            : "neutral"
+                        }"
+                        id="currentDelta"
+                    >
+                        ${delta == null ? "—" : formatDelta(delta)}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="timer-controls">
+
+                <button
+                    class="control start"
+                    id="startButton"
+                    onclick="startTimer()"
+                    ${state.running || state.finished ? "disabled" : ""}>
+                    ${state.currentSegment === 0 && !state.running ? "START" : "FORTSETZEN"}
+                </button>
+
+                <button
+                    class="control split"
+                    id="splitButton"
+                    onclick="splitTimer()"
+                    ${!state.running ? "disabled" : ""}>
+                    SPLIT
+                </button>
+
+                <button
+                    class="control stop"
+                    onclick="stopRun()"
+                    ${!state.running ? "disabled" : ""}>
+                    STOP
+                </button>
+
+            </div>
+
+
+            <div class="segment-list">
+
+                <div class="segment-head">
+                    <div>#</div>
+                    <div>Segment</div>
+                    <div style="text-align:right">Zeit</div>
+                    <div style="text-align:right">Best</div>
+                    <div style="text-align:right">Diff</div>
+                </div>
+
+                ${
+                    project.segments.map((segment,index) =>
+                        renderSegment(
+                            project,
+                            segment,
+                            index,
+                            currentSegmentTime,
+                            currentBest
+                        )
+                    ).join("")
+                }
+
+            </div>
+
+
+            <div class="timer-footer">
+
+                <div>
+                    Segment ${Math.min(state.currentSegment + 1, project.segments.length)}
+                    / ${project.segments.length}
+                </div>
+
+                <div class="keyboard">
+                    SPACE = Start / Split
+                    &nbsp;·&nbsp;
+                    R = Reset
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+function renderSegment(project,segment,index,currentSegmentTime,currentBest){
+
+    const time = state.segmentTimes[index];
+
+    let diff = null;
+
+    if(time != null){
+
+        const best = getBestSegment(project,index);
+
+        if(best != null){
+            diff = time - best;
+        }
+    }
+
+    if(index === state.currentSegment && state.running){
+        diff = currentBest == null
+            ? null
+            : currentSegmentTime - currentBest;
+    }
+
+    const diffClass =
+        diff == null
+        ? "neutral"
+        : diff < 0
+        ? "good"
+        : diff > 0
+        ? "bad"
+        : "neutral";
+
+    return `
+        <div class="segment ${
+            index === state.currentSegment && state.running
+            ? "current"
+            : time != null
+            ? "finished"
+            : ""
+        }">
+
+            <div class="segment-number">
+                ${index + 1}
+            </div>
+
+            <div class="segment-name">
+                ${escapeHTML(segment.name)}
+            </div>
+
+            <div class="segment-time">
+                ${
+                    index === state.currentSegment && state.running
+                    ? formatTime(currentSegmentTime)
+                    : time == null
+                    ? "—"
+                    : formatTime(time)
+                }
+            </div>
+
+            <div class="segment-best">
+                ${
+                    getBestSegment(project,index) == null
+                    ? "—"
+                    : formatTime(getBestSegment(project,index))
+                }
+            </div>
+
+            <div class="segment-delta ${diffClass}">
+                ${diff == null ? "—" : formatDelta(diff)}
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* =========================================================
+   TIMER ENGINE
+   ========================================================= */
+
+function getCurrentElapsed(){
+
+    if(state.running){
+        return state.elapsedBeforeStart + (performance.now() - state.startTime);
+    }
+
+    return state.elapsedBeforeStart;
+}
+
+function getCurrentSegmentElapsed(){
+
+    if(state.currentSegment === 0){
+        return getCurrentElapsed();
+    }
+
+    const previous = state.segmentTimes
+        .slice(0,state.currentSegment)
+        .reduce(
+            (sum,value) => sum + (value || 0),
+            0
+        );
+
+    return Math.max(
+        0,
+        getCurrentElapsed() - previous
+    );
+}
+
+function startTimer(){
+
+    if(state.running || state.finished){
+        return;
+    }
+
+    state.running = true;
+
+    state.startTime = performance.now();
+
+    if(!state.runStartDate){
+        state.runStartDate = new Date().toISOString();
+    }
+
+    state.lastSplitTimestamp = performance.now();
+
+    startVisualTimer();
+
+    updateTimerButtons();
+}
+
+function startVisualTimer(){
+
+    stopVisualTimer();
+
+    timerInterval = setInterval(() => {
+
+        updateLiveDisplay();
+
+    },40);
+}
+
+function stopVisualTimer(){
+
+    if(timerInterval){
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+function updateLiveDisplay(){
+
+    const timeElement = document.getElementById("mainTimer");
+
+    if(!timeElement){
+        return;
+    }
+
+    timeElement.textContent =
+        formatTime(getCurrentElapsed());
+
+    const segmentElement =
+        document.getElementById("currentSegmentDisplay");
+
+    if(segmentElement){
+        segmentElement.textContent =
+            formatTime(getCurrentSegmentElapsed());
+    }
+
+    const project = getProject();
+
+    if(project){
+
+        const best =
+            getBestSegment(project,state.currentSegment);
+
+        const deltaElement =
+            document.getElementById("currentDelta");
+
+        if(deltaElement){
+
+            if(best == null){
+
+                deltaElement.textContent = "—";
+                deltaElement.className =
+                    "compare-value neutral";
+
+            }else{
+
+                const delta =
+                    getCurrentSegmentElapsed() - best;
+
+                deltaElement.textContent =
+                    formatDelta(delta);
+
+                deltaElement.className =
+                    "compare-value " +
+                    (
+                        delta < 0
+                        ? "good"
+                        : delta > 0
+                        ? "bad"
+                        : "neutral"
+                    );
+            }
+        }
+    }
+}
+
+function updateTimerButtons(){
+
+    const start = document.getElementById("startButton");
+    const split = document.getElementById("splitButton");
+    const stop = document.getElementById("stopButton");
+
+    if(start){
+        start.disabled =
+            state.running || state.finished;
+    }
+
+    if(split){
+        split.disabled =
+            !state.running;
+    }
+
+    if(stop){
+        stop.disabled =
+            !state.running;
+    }
+}
+
+
+/* =========================================================
+   SPLIT
+   ========================================================= */
+
+function splitTimer(){
+
+    if(!state.running){
+        return;
+    }
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    const now = performance.now();
+
+    const total =
+        state.elapsedBeforeStart +
+        (now - state.startTime);
+
+    const previousSegments =
+        state.segmentTimes
+            .slice(0,state.currentSegment)
+            .reduce(
+                (sum,value) => sum + (value || 0),
+                0
+            );
+
+    const segmentTime =
+        Math.max(0,total - previousSegments);
+
+    state.segmentTimes[state.currentSegment] =
+        segmentTime;
+
+    state.elapsedBeforeStart = total;
+
+    state.startTime = now;
+
+    state.currentSegment++;
+
+    if(state.currentSegment >= project.segments.length){
+
+        finishRun();
+
+        return;
+    }
+
+    renderTimer();
+}
+
+
+/* =========================================================
+   STOP
+   ========================================================= */
+
+function stopRun(){
+
+    if(!state.running){
+        return;
+    }
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    const now = performance.now();
+
+    const total =
+        state.elapsedBeforeStart +
+        (now - state.startTime);
+
+    const previousSegments =
+        state.segmentTimes
+            .slice(0,state.currentSegment)
+            .reduce(
+                (sum,value) => sum + (value || 0),
+                0
+            );
+
+    state.segmentTimes[state.currentSegment] =
+        Math.max(0,total - previousSegments);
+
+    state.elapsedBeforeStart = total;
+
+    state.running = false;
+
+    state.finished = true;
+
+    stopVisualTimer();
+
+    saveRun(false);
+
+    renderTimer();
+}
+
+function finishRun(){
+
+    state.running = false;
+    state.finished = true;
+
+    stopVisualTimer();
+
+    saveRun(true);
+
+    renderTimer();
+}
+
+
+/* =========================================================
+   SAVE RUN
+   ========================================================= */
+
+function saveRun(completed){
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    const total =
+        state.segmentTimes.reduce(
+            (sum,value) => sum + (value || 0),
+            0
+        );
+
+    const run = {
+        id:createId(),
+        date:new Date().toISOString(),
+        total:total,
+        segments:[...state.segmentTimes],
+        completed:completed
+    };
+
+    project.history.unshift(run);
+
+    if(project.history.length > 100){
+        project.history =
+            project.history.slice(0,100);
+    }
+
+    saveDatabase();
+}
+
+
+/* =========================================================
+   BEST SEGMENTS
+   ========================================================= */
+
+function getBestSegment(project,index){
+
+    const values = project.history
+        .filter(run => run.segments)
+        .map(run => run.segments[index])
+        .filter(value =>
+            typeof value === "number" &&
+            value > 0
+        );
+
+    if(!values.length){
+        return null;
+    }
+
+    return Math.min(...values);
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetTimer(){
+
+    if(state.running){
+
+        if(!confirm("Lauf wirklich zurücksetzen?")){
+            return;
+        }
+
+    }
+
+    resetCurrentRun(true);
+}
+
+
+/* =========================================================
+   UNDO
+   ========================================================= */
+
+function undoLastSplit(){
+
+    if(state.running){
+        return;
+    }
+
+    if(state.currentSegment <= 0){
+        return;
+    }
+
+    const index = state.currentSegment - 1;
+
+    state.segmentTimes[index] = null;
+
+    state.currentSegment = index;
+
+    state.finished = false;
+
+    renderTimer();
+}
+
+
+/* =========================================================
+   SEGMENT MANAGEMENT
+   ========================================================= */
+
+function manageSegments(){
+
+    if(state.running){
+        alert("Segmente können während eines laufenden Runs nicht bearbeitet werden.");
+        return;
+    }
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    document.getElementById("modalRoot").innerHTML = `
+        <div class="modal-overlay" onclick="closeModal(event)">
+
+            <div class="modal"
+                style="max-width:650px"
+                onclick="event.stopPropagation()">
+
+                <h2>Segmente</h2>
+
+                <div id="segmentEditor">
+
+                    ${project.segments.map((segment,index) => `
+
+                        <div style="
+                            display:grid;
+                            grid-template-columns:35px 1fr auto auto auto;
+                            gap:6px;
+                            align-items:center;
+                            margin-bottom:7px;
+                        ">
+
+                            <div style="color:var(--muted)">
+                                ${index + 1}
+                            </div>
+
+                            <input
+                                id="segmentInput_${segment.id}"
+                                value="${escapeAttribute(segment.name)}"
+                                style="
+                                    width:100%;
+                                    padding:9px;
+                                    background:#080b0e;
+                                    color:var(--text);
+                                    border:1px solid var(--border);
+                                    border-radius:6px;
+                                "
+                            >
+
+                            <button
+                                class="btn small"
+                                onclick="moveSegment('${segment.id}',-1)">
+                                ↑
+                            </button>
+
+                            <button
+                                class="btn small"
+                                onclick="moveSegment('${segment.id}',1)">
+                                ↓
+                            </button>
+
+                            <button
+                                class="btn small danger"
+                                onclick="removeSegment('${segment.id}')">
+                                ×
+                            </button>
+
+                        </div>
+
+                    `).join("")}
+
+                </div>
+
+                <div style="margin-top:12px">
+                    <button
+                        class="btn"
+                        onclick="addSegment()">
+                        + Segment hinzufügen
+                    </button>
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        class="btn"
+                        onclick="closeModal()">
+                        Schließen
+                    </button>
+
+                    <button
+                        class="btn primary"
+                        onclick="saveSegmentNames()">
+                        Speichern
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+function saveSegmentNames(){
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    project.segments.forEach(segment => {
+
+        const input =
+            document.getElementById(
+                "segmentInput_" + segment.id
+            );
+
+        if(input){
+            segment.name =
+                input.value.trim() ||
+                "Segment";
+        }
+
+    });
+
+    saveDatabase();
+
+    closeModal();
+
+    resetCurrentRun(false);
+
+    renderTimer();
+}
+
+function addSegment(){
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    project.segments.push({
+        id:createId(),
+        name:"Neues Segment"
+    });
+
+    saveDatabase();
+
+    manageSegments();
+}
+
+function removeSegment(id){
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    if(project.segments.length <= 1){
+        alert("Ein Speedrun muss mindestens ein Segment besitzen.");
+        return;
+    }
+
+    const segment =
+        project.segments.find(s => s.id === id);
+
+    if(!segment){
+        return;
+    }
+
+    if(!confirm(
+        'Segment "' +
+        segment.name +
+        '" wirklich löschen?'
+    )){
+        return;
+    }
+
+    project.segments =
+        project.segments.filter(s => s.id !== id);
+
+    saveDatabase();
+
+    manageSegments();
+}
+
+function moveSegment(id,direction){
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    const index =
+        project.segments.findIndex(s => s.id === id);
+
+    const newIndex = index + direction;
+
+    if(
+        index < 0 ||
+        newIndex < 0 ||
+        newIndex >= project.segments.length
+    ){
+        return;
+    }
+
+    const temp =
+        project.segments[index];
+
+    project.segments[index] =
+        project.segments[newIndex];
+
+    project.segments[newIndex] =
+        temp;
+
+    saveDatabase();
+
+    manageSegments();
+}
+
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+function showHistory(){
+
+    if(state.running){
+        alert("Beende den aktuellen Lauf zuerst.");
+        return;
+    }
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    document.getElementById("modalRoot").innerHTML = `
+
+        <div class="modal-overlay" onclick="closeModal(event)">
+
+            <div class="modal"
+                style="max-width:700px"
+                onclick="event.stopPropagation()">
+
+                <h2>Run History</h2>
+
+                ${
+                    project.history.length
+                    ?
+                    `
+                    <div class="history">
+
+                        <div class="history-row header-row">
+                            <div>#</div>
+                            <div>Zeit</div>
+                            <div>Datum</div>
+                            <div>Status</div>
+                        </div>
+
+                        ${
+                            project.history
+                            .slice(0,30)
+                            .map((run,index) => `
+
+                                <div class="history-row">
+
+                                    <div>
+                                        ${index + 1}
+                                    </div>
+
+                                    <div>
+                                        ${formatTime(run.total)}
+                                    </div>
+
+                                    <div>
+                                        ${formatDate(run.date)}
+                                    </div>
+
+                                    <div>
+                                        ${
+                                            run.completed
+                                            ? "✓ Komplett"
+                                            : "Gestoppt"
+                                        }
+                                    </div>
+
+                                </div>
+
+                            `).join("")
+                        }
+
+                    </div>
+                    `
+                    :
+                    `<div class="empty">
+                        Noch keine Runs.
+                    </div>`
+                }
+
+                <div class="modal-actions">
+
+                    <button
+                        class="btn danger"
+                        onclick="clearHistory()">
+                        History löschen
+                    </button>
+
+                    <button
+                        class="btn"
+                        onclick="closeModal()">
+                        Schließen
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+function clearHistory(){
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    if(!confirm("Alle bisherigen Runs löschen?")){
+        return;
+    }
+
+    project.history = [];
+
+    saveDatabase();
+
+    closeModal();
+
+    renderTimer();
+}
+
+function formatDate(date){
+
+    try{
+
+        return new Date(date).toLocaleString(
+            "de-DE",
+            {
+                day:"2-digit",
+                month:"2-digit",
+                year:"2-digit",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+    }catch{
+        return "—";
+    }
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function goHome(){
+
+    if(state.running){
+
+        if(!confirm(
+            "Der aktuelle Run läuft noch. Wirklich zum Hauptmenü?"
+        )){
+            return;
+        }
+
+    }
+
+    stopVisualTimer();
+
+    renderHome();
+}
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+function showSettings(){
+
+    document.getElementById("modalRoot").innerHTML = `
+
+        <div class="modal-overlay" onclick="closeModal(event)">
+
+            <div class="modal"
+                onclick="event.stopPropagation()">
+
+                <h2>Einstellungen</h2>
+
+                <p style="
+                    color:var(--muted);
+                    line-height:1.5;
+                ">
+                    Dieser Speedrun-Timer speichert deine
+                    Speedruns und Run-History direkt im Browser.
+                </p>
+
+                <div style="
+                    border-top:1px solid var(--border);
+                    margin-top:15px;
+                    padding-top:15px;
+                ">
+
+                    <button
+                        class="btn danger"
+                        onclick="deleteAllData()">
+                        Alle Daten löschen
+                    </button>
+
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        class="btn"
+                        onclick="closeModal()">
+                        Schließen
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+function deleteAllData(){
+
+    if(!confirm(
+        "Wirklich ALLE Speedruns und Zeiten löschen?"
+    )){
+        return;
+    }
+
+    localStorage.removeItem(STORAGE_KEY);
+
+    database = {
+        projects:[]
+    };
+
+    closeModal();
+
+    renderHome();
+}
+
+
+/* =========================================================
+   KEYBOARD
+   ========================================================= */
+
+document.addEventListener("keydown",event => {
+
+    if(
+        event.target &&
+        (
+            event.target.tagName === "INPUT" ||
+            event.target.tagName === "TEXTAREA"
+        )
+    ){
+        return;
+    }
+
+    if(event.code === "Space"){
+
+        event.preventDefault();
+
+        if(state.page !== "timer"){
+            return;
+        }
+
+        if(state.running){
+            splitTimer();
+        }else if(!state.finished){
+            startTimer();
+        }
+
+    }
+
+    if(
+        event.key.toLowerCase() === "r" &&
+        state.page === "timer"
+    ){
+
+        resetTimer();
+
+    }
+
+    if(
+        event.key.toLowerCase() === "z" &&
+        state.page === "timer"
+    ){
+
+        undoLastSplit();
+
+    }
+
+    if(event.key === "Escape"){
+
+        closeModal();
+
+    }
+
+});
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+document.getElementById("homeBtn")
+    .addEventListener("click",() => {
+
+        if(state.page === "timer"){
+            goHome();
+        }else{
+            renderHome();
+        }
+
+    });
+
+document.getElementById("settingsBtn")
+    .addEventListener("click",showSettings);
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+
+    return escapeHTML(value);
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+renderHome();
+
+</script>
+
+</body>
+  </html>
