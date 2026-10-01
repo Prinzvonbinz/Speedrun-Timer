@@ -2,41 +2,20 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Speedrun Timer</title>
 
 <style>
-:root{
-    --bg:#090b10;
-    --panel:#121620;
-    --panel2:#191e29;
-    --border:#293140;
-    --text:#f5f7fb;
-    --muted:#8b94a5;
-    --accent:#7857ff;
-    --accent2:#967cff;
-    --green:#35d27f;
-    --red:#ff5570;
-    --yellow:#ffd166;
-}
-
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
 }
 
-html,
 body{
     margin:0;
-    padding:0;
-    min-height:100%;
-    background:var(--bg);
-    color:var(--text);
+    background:#101114;
+    color:#f2f2f2;
     font-family:Arial,Helvetica,sans-serif;
-}
-
-body{
-    overflow-x:hidden;
 }
 
 button,
@@ -52,149 +31,210 @@ button{
     min-height:100vh;
 }
 
-.header{
-    height:62px;
-    background:#0c0f15;
-    border-bottom:1px solid var(--border);
+.screen{
+    min-height:100vh;
+    padding:18px;
+}
+
+.hidden{
+    display:none !important;
+}
+
+/* HOME */
+
+.home-header{
     display:flex;
-    align-items:center;
     justify-content:space-between;
-    padding:0 15px;
-    position:sticky;
-    top:0;
-    z-index:50;
+    align-items:center;
+    gap:15px;
+    margin-bottom:25px;
 }
 
 .logo{
-    font-size:20px;
-    font-weight:900;
-    letter-spacing:2px;
-}
-
-.logo span{
-    color:var(--accent2);
-}
-
-.header-buttons{
-    display:flex;
-    gap:7px;
-}
-
-.icon-button{
-    width:40px;
-    height:40px;
-    border:1px solid var(--border);
-    border-radius:10px;
-    background:var(--panel);
-    color:var(--text);
-    font-size:19px;
-}
-
-.main{
-    max-width:1100px;
-    margin:auto;
-    padding:20px 14px 60px;
-}
-
-.title{
     font-size:28px;
-    font-weight:900;
-    margin-bottom:6px;
+    font-weight:800;
+    letter-spacing:-1px;
 }
 
 .subtitle{
-    color:var(--muted);
-    margin-bottom:20px;
+    color:#888;
+    font-size:13px;
+    margin-top:4px;
 }
 
-.button{
-    min-height:42px;
-    padding:0 14px;
-    border:1px solid var(--border);
+.primary-button{
+    border:0;
     border-radius:10px;
-    background:var(--panel2);
-    color:var(--text);
+    background:#e8e8e8;
+    color:#111;
+    padding:12px 17px;
     font-weight:700;
 }
 
-.button:active{
+.primary-button:active{
     transform:scale(.97);
 }
 
-.button.primary{
-    background:var(--accent);
-    border-color:var(--accent);
-}
-
-.button.green{
-    background:var(--green);
-    border-color:var(--green);
-    color:#06140c;
-}
-
-.button.red{
-    background:var(--red);
-    border-color:var(--red);
-    color:#25070e;
-}
-
-.button.yellow{
-    background:var(--yellow);
-    border-color:var(--yellow);
-    color:#201800;
-}
-
-.button.small{
-    min-height:36px;
-    padding:0 10px;
-    font-size:13px;
-}
-
-.projects{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:12px;
-    margin-top:15px;
-}
-
-.project{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:15px;
-    padding:16px;
-}
-
-.project-name{
-    font-size:20px;
-    font-weight:900;
-    margin-bottom:7px;
-}
-
-.project-info{
-    color:var(--muted);
-    font-size:13px;
-    margin-bottom:15px;
-}
-
-.project-buttons{
+.project-list{
     display:flex;
-    flex-wrap:wrap;
-    gap:7px;
+    flex-direction:column;
+    gap:10px;
 }
 
 .empty{
-    padding:35px 15px;
-    border:1px dashed var(--border);
-    border-radius:15px;
+    border:1px dashed #444;
+    border-radius:12px;
+    padding:30px 15px;
     text-align:center;
-    color:var(--muted);
+    color:#777;
 }
 
-.empty-title{
-    color:var(--text);
+.project-card{
+    background:#191b20;
+    border:1px solid #292c33;
+    border-radius:14px;
+    padding:15px;
+}
+
+.project-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+}
+
+.project-name{
     font-size:18px;
+    font-weight:700;
+}
+
+.project-info{
+    color:#888;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.project-actions{
+    display:flex;
+    gap:7px;
+    margin-top:14px;
+}
+
+.small-button{
+    border:1px solid #333;
+    background:#22252b;
+    color:#ddd;
+    border-radius:8px;
+    padding:8px 11px;
+    font-size:13px;
+}
+
+.small-button.danger{
+    color:#ff7777;
+}
+
+/* FORMS */
+
+.form-box{
+    max-width:650px;
+    margin:0 auto;
+    background:#191b20;
+    border:1px solid #292c33;
+    border-radius:15px;
+    padding:18px;
+}
+
+.form-title{
+    font-size:23px;
     font-weight:800;
-    margin-bottom:6px;
+    margin-bottom:18px;
+}
+
+.field{
+    margin-bottom:15px;
+}
+
+.field label{
+    display:block;
+    font-size:13px;
+    color:#999;
+    margin-bottom:7px;
+}
+
+.field input{
+    width:100%;
+    border:1px solid #343740;
+    background:#111318;
+    color:#fff;
+    border-radius:9px;
+    padding:12px;
+    outline:none;
+}
+
+.field input:focus{
+    border-color:#777;
+}
+
+.form-actions{
+    display:flex;
+    gap:9px;
+    margin-top:18px;
+}
+
+.form-actions button{
+    flex:1;
+}
+
+.segment-editor{
+    margin-top:20px;
+}
+
+.segment-editor-title{
+    font-size:14px;
+    color:#aaa;
+    margin-bottom:10px;
+}
+
+.edit-segment-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:8px;
+}
+
+.edit-segment-row input{
+    flex:1;
+}
+
+.segment-number{
+    width:30px;
+    color:#666;
+    text-align:center;
+}
+
+.remove-segment{
+    width:38px;
+    height:42px;
+    border-radius:8px;
+    border:1px solid #333;
+    background:#22252b;
+    color:#ff7777;
+}
+
+.add-segment{
+    width:100%;
+    margin-top:5px;
+    padding:11px;
+    border-radius:9px;
+    border:1px dashed #444;
+    background:#15171b;
+    color:#aaa;
+}
+
+/* TIMER */
+
+.timer-screen{
+    padding:0;
 }
 
 .timer-header{
@@ -202,201 +242,123 @@ button{
     align-items:center;
     justify-content:space-between;
     gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:14px;
+    padding:14px 16px;
+    border-bottom:1px solid #25272d;
+    background:#121318;
+    position:sticky;
+    top:0;
+    z-index:10;
 }
 
-.timer-name{
-    font-size:25px;
-    font-weight:900;
-}
-
-.timer-header-buttons{
-    display:flex;
-    flex-wrap:wrap;
-    gap:7px;
-}
-
-.timer-box{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:17px;
-    padding:28px 10px 23px;
-    text-align:center;
-}
-
-.timer{
-    font-family:"Courier New",monospace;
-    font-size:clamp(45px,12vw,88px);
-    font-weight:700;
-    line-height:1;
-}
-
-.timer-status{
-    color:var(--muted);
-    font-size:13px;
-    margin-top:10px;
-}
-
-.compare{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:9px;
-    margin-top:10px;
-}
-
-.compare-box{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:12px;
-}
-
-.compare-label{
-    color:var(--muted);
-    font-size:11px;
-    text-transform:uppercase;
-    margin-bottom:6px;
-}
-
-.compare-value{
-    font-family:"Courier New",monospace;
-    font-weight:700;
-    font-size:17px;
+.timer-title{
+    font-weight:800;
+    font-size:18px;
     overflow:hidden;
-    white-space:nowrap;
     text-overflow:ellipsis;
+    white-space:nowrap;
 }
 
-.good{
-    color:var(--green);
+.back-button{
+    border:1px solid #333;
+    background:#202228;
+    color:#ddd;
+    border-radius:8px;
+    padding:8px 11px;
 }
 
-.bad{
-    color:var(--red);
+.timer-content{
+    max-width:900px;
+    margin:0 auto;
+    padding:20px 15px 160px;
 }
 
-.neutral{
-    color:var(--muted);
+.big-time{
+    font-family:"Courier New",monospace;
+    font-size:clamp(46px,14vw,90px);
+    font-weight:700;
+    text-align:center;
+    letter-spacing:-3px;
+    margin:10px 0 24px;
+    color:#f5f5f5;
 }
 
-.controls{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    margin:10px 0;
+.run-status{
+    text-align:center;
+    color:#777;
+    font-size:12px;
+    margin-top:-15px;
+    margin-bottom:20px;
 }
 
-.control{
-    min-height:54px;
-    border:1px solid var(--border);
-    border-radius:12px;
-    background:var(--panel);
-    color:var(--text);
-    font-weight:900;
-}
-
-.control.start{
-    background:var(--green);
-    color:#06140c;
-    border-color:var(--green);
-}
-
-.control.split{
-    background:var(--accent);
-    border-color:var(--accent);
-}
-
-.control.stop{
-    background:var(--red);
-    color:#25070e;
-    border-color:var(--red);
-}
-
-.panel{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:15px;
-    overflow:hidden;
-    margin-top:12px;
-}
-
-.panel-header{
-    min-height:53px;
+.segment-list{
     display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:9px 12px;
-    border-bottom:1px solid var(--border);
-}
-
-.panel-title{
-    font-weight:900;
+    flex-direction:column;
+    gap:3px;
 }
 
 .segment-row{
     display:grid;
-    grid-template-columns:38px minmax(0,1fr) 105px 105px 90px;
+    grid-template-columns:1fr auto;
+    gap:15px;
     align-items:center;
-    gap:7px;
-    min-height:51px;
-    padding:7px 11px;
-    border-bottom:1px solid #202631;
-}
-
-.segment-row:last-child{
-    border-bottom:0;
+    padding:11px 12px;
+    border-radius:7px;
+    background:#17191e;
 }
 
 .segment-row.current{
-    background:#181e2a;
+    background:#25282f;
 }
 
-.segment-number{
-    color:var(--muted);
-    text-align:center;
-    font-size:12px;
+.segment-row.finished{
+    color:#ddd;
 }
 
 .segment-name{
+    min-width:0;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
 }
 
-.segment-time,
-.segment-best,
-.segment-diff{
-    text-align:right;
+.segment-time{
     font-family:"Courier New",monospace;
-    font-size:13px;
+    font-size:15px;
+    color:#aaa;
 }
 
-.segment-best{
-    color:var(--muted);
+.segment-row.current .segment-time{
+    color:#fff;
+}
+
+.history-section{
+    margin-top:35px;
+}
+
+.section-title{
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.history-empty{
+    color:#666;
+    font-size:13px;
+    padding:15px 0;
 }
 
 .history-row{
     display:grid;
-    grid-template-columns:55px 1fr 110px 80px;
-    align-items:center;
-    gap:8px;
-    padding:12px;
-    border-bottom:1px solid #202631;
-}
-
-.history-row:last-child{
-    border-bottom:0;
-}
-
-.history-number{
-    color:var(--muted);
-    font-size:12px;
+    grid-template-columns:1fr auto;
+    gap:10px;
+    padding:10px 12px;
+    border-bottom:1px solid #24262c;
 }
 
 .history-date{
-    color:var(--muted);
-    font-size:12px;
+    color:#777;
+    font-size:11px;
+    margin-top:3px;
 }
 
 .history-time{
@@ -404,195 +366,132 @@ button{
     font-weight:700;
 }
 
-.pb{
-    color:var(--yellow);
+/* CONTROLS */
+
+.controls{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:20;
+    padding:10px;
+    background:rgba(15,16,20,.96);
+    border-top:1px solid #292b31;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 1fr;
+    gap:7px;
 }
 
-.modal-background{
+.control{
+    min-height:52px;
+    border-radius:10px;
+    border:1px solid #34363d;
+    background:#202229;
+    color:#ddd;
+    font-weight:700;
+}
+
+.control:active{
+    transform:scale(.97);
+}
+
+.control.start{
+    background:#e8e8e8;
+    color:#111;
+    border-color:#e8e8e8;
+}
+
+.control.split{
+    background:#272a31;
+    color:#fff;
+}
+
+.control.stop{
+    background:#292b31;
+    color:#fff;
+}
+
+.control:disabled{
+    opacity:.4;
+    cursor:default;
+}
+
+/* MODAL */
+
+.modal-overlay{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.72);
+    z-index:100;
+    background:rgba(0,0,0,.7);
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:12px;
-    z-index:200;
+    padding:20px;
 }
 
 .modal{
-    width:min(600px,100%);
-    max-height:92vh;
-    overflow:auto;
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:17px;
-    box-shadow:0 20px 80px rgba(0,0,0,.55);
-}
-
-.modal-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:15px;
-    border-bottom:1px solid var(--border);
+    width:min(430px,100%);
+    background:#1b1d22;
+    border:1px solid #33363d;
+    border-radius:15px;
+    padding:20px;
 }
 
 .modal-title{
     font-size:19px;
-    font-weight:900;
+    font-weight:800;
+    margin-bottom:8px;
 }
 
-.modal-body{
-    padding:15px;
+.modal-text{
+    color:#999;
+    font-size:14px;
+    line-height:1.5;
 }
 
-.modal-footer{
+.modal-actions{
     display:flex;
-    justify-content:flex-end;
-    flex-wrap:wrap;
-    gap:7px;
-    padding:13px 15px;
-    border-top:1px solid var(--border);
+    gap:8px;
+    margin-top:20px;
 }
 
-.form-label{
-    display:block;
-    color:var(--muted);
-    font-size:13px;
-    margin-bottom:7px;
-}
-
-.form-input{
-    width:100%;
-    height:45px;
-    padding:0 11px;
-    border:1px solid var(--border);
+.modal-actions button{
+    flex:1;
+    padding:11px;
     border-radius:9px;
-    background:#0c1016;
-    color:var(--text);
-    outline:none;
+    border:1px solid #333;
+    background:#25272d;
+    color:#ddd;
 }
 
-.form-input:focus{
-    border-color:var(--accent);
+.modal-actions .confirm{
+    background:#eee;
+    color:#111;
 }
 
-.segment-editor{
-    display:flex;
-    flex-direction:column;
-    gap:7px;
-}
+@media(max-width:600px){
+    .screen{
+        padding:14px;
+    }
 
-.editor-row{
-    display:grid;
-    grid-template-columns:34px minmax(0,1fr) 38px 38px 38px;
-    gap:6px;
-    align-items:center;
-}
+    .home-header{
+        align-items:flex-start;
+    }
 
-.editor-number{
-    color:var(--muted);
-    text-align:center;
-    font-size:12px;
-}
-
-.editor-input{
-    width:100%;
-    height:41px;
-    padding:0 10px;
-    border:1px solid var(--border);
-    border-radius:9px;
-    background:#0c1016;
-    color:var(--text);
-    outline:none;
-}
-
-.editor-input:focus{
-    border-color:var(--accent);
-}
-
-.editor-button{
-    width:38px;
-    height:38px;
-    border:1px solid var(--border);
-    border-radius:8px;
-    background:var(--panel2);
-    color:var(--text);
-}
-
-.editor-delete{
-    color:var(--red);
-}
-
-.add-segment{
-    margin-top:12px;
-}
-
-.stat-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:9px;
-}
-
-.stat{
-    background:var(--panel2);
-    border:1px solid var(--border);
-    border-radius:11px;
-    padding:12px;
-}
-
-.stat-label{
-    color:var(--muted);
-    font-size:11px;
-}
-
-.stat-value{
-    font-size:20px;
-    font-weight:900;
-    margin-top:4px;
-}
-
-@media(max-width:700px){
+    .primary-button{
+        padding:10px 12px;
+    }
 
     .controls{
         grid-template-columns:1fr 1fr;
     }
 
-    .compare{
-        grid-template-columns:1fr 1fr;
+    .control{
+        min-height:50px;
     }
 
-    .compare-box:last-child{
-        grid-column:1 / -1;
-    }
-
-    .segment-row{
-        grid-template-columns:30px minmax(0,1fr) 90px;
-    }
-
-    .segment-best,
-    .segment-diff{
-        display:none;
-    }
-
-    .history-row{
-        grid-template-columns:40px 1fr 90px;
-    }
-
-    .history-date{
-        display:none;
-    }
-}
-
-@media(max-width:420px){
-
-    .editor-row{
-        grid-template-columns:28px minmax(0,1fr) 34px 34px 34px;
-    }
-
-    .editor-button{
-        width:34px;
-        height:34px;
+    .timer-content{
+        padding-bottom:145px;
     }
 }
 </style>
@@ -600,40 +499,10 @@ button{
 
 <body>
 
-<header class="header">
-
-    <div class="logo">
-        SPEED<span>RUN</span>
-    </div>
-
-    <div class="header-buttons">
-
-        <button
-            type="button"
-            class="icon-button"
-            id="homeButton"
-        >⌂</button>
-
-        <button
-            type="button"
-            class="icon-button"
-            id="settingsButton"
-        >⚙</button>
-
-    </div>
-
-</header>
-
 <div id="app"></div>
 
 <script>
-"use strict";
-
-/* =========================================================
-   SPEICHER
-========================================================= */
-
-const STORAGE_KEY = "speedrun_timer_final_v1";
+const STORAGE_KEY = "speedrun_timer_final_v2";
 
 let data = {
     projects: [],
@@ -655,486 +524,499 @@ let timer = {
 };
 
 
-/* =========================================================
-   BASIS
-========================================================= */
+/* =========================
+   BASIC UTILITIES
+========================= */
 
 function id(){
-    return Date.now().toString(36) +
-        Math.random().toString(36).slice(2,8);
+    return Math.random().toString(36).slice(2,9);
+}
+
+function save(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 function load(){
     try{
-        const saved = localStorage.getItem(STORAGE_KEY);
+        const stored = localStorage.getItem(STORAGE_KEY);
 
-        if(saved){
-            const parsed = JSON.parse(saved);
+        if(stored){
+            const parsed = JSON.parse(stored);
 
-            if(parsed && typeof parsed === "object"){
+            if(parsed && Array.isArray(parsed.projects)){
                 data = parsed;
             }
         }
     }catch(error){
-        console.error(error);
+        console.log("Save data konnte nicht geladen werden.");
     }
 
     normalize();
 }
 
-function save(){
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(data)
-    );
-}
-
 function normalize(){
-
     if(!Array.isArray(data.projects)){
         data.projects = [];
     }
 
     if(!data.settings){
-        data.settings = {
-            confirmReset:true,
-            confirmDelete:true
-        };
+        data.settings = {};
+    }
+
+    if(typeof data.settings.confirmReset !== "boolean"){
+        data.settings.confirmReset = true;
+    }
+
+    if(typeof data.settings.confirmDelete !== "boolean"){
+        data.settings.confirmDelete = true;
     }
 
     data.projects.forEach(project => {
-
-        if(!project.id){
-            project.id = id();
-        }
-
-        project.name =
-            String(project.name || "Speedrun").trim() ||
-            "Speedrun";
-
         if(!Array.isArray(project.segments)){
             project.segments = [];
-        }
-
-        project.segments.forEach(segment => {
-
-            if(!segment.id){
-                segment.id = id();
-            }
-
-            segment.name =
-                String(segment.name || "Segment").trim() ||
-                "Segment";
-        });
-
-        if(project.segments.length === 0){
-            project.segments.push({
-                id:id(),
-                name:"Segment 1"
-            });
         }
 
         if(!Array.isArray(project.history)){
             project.history = [];
         }
+
+        project.segments = project.segments.map(segment => {
+            if(typeof segment === "string"){
+                return {
+                    id:id(),
+                    name:segment
+                };
+            }
+
+            return {
+                id:segment.id || id(),
+                name:segment.name || "Segment"
+            };
+        });
     });
 
     save();
 }
 
 function getProject(){
-    return data.projects.find(
-        project => project.id === activeProjectId
-    ) || null;
+    return data.projects.find(project => project.id === activeProjectId);
 }
 
 function escapeHtml(value){
     return String(value)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 }
 
-
-/* =========================================================
-   ZEIT
-========================================================= */
-
 function timeText(milliseconds){
-
-    milliseconds = Number(milliseconds);
-
-    if(!Number.isFinite(milliseconds) || milliseconds < 0){
+    if(!Number.isFinite(milliseconds)){
         milliseconds = 0;
     }
 
-    const hundredths =
-        Math.floor(milliseconds / 10);
+    milliseconds = Math.max(0,milliseconds);
 
-    const hh = hundredths % 100;
-
-    const totalSeconds =
-        Math.floor(hundredths / 100);
-
-    const seconds =
-        totalSeconds % 60;
-
-    const minutes =
-        Math.floor(totalSeconds / 60);
+    const totalMs = Math.floor(milliseconds);
+    const minutes = Math.floor(totalMs / 60000);
+    const seconds = Math.floor((totalMs % 60000) / 1000);
+    const ms = totalMs % 1000;
 
     return (
         String(minutes).padStart(2,"0") +
         ":" +
         String(seconds).padStart(2,"0") +
         "." +
-        String(hh).padStart(2,"0")
+        String(ms).padStart(3,"0")
     );
 }
 
 function dateText(timestamp){
-    return new Date(timestamp).toLocaleString(
-        "de-DE",
-        {
-            day:"2-digit",
-            month:"2-digit",
-            year:"2-digit",
-            hour:"2-digit",
-            minute:"2-digit"
-        }
-    );
+    if(!timestamp){
+        return "";
+    }
+
+    return new Date(timestamp).toLocaleString("de-DE",{
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+    });
 }
 
 
-/* =========================================================
+/* =========================
+   APP START
+========================= */
+
+load();
+showHome();
+
+
+/* =========================
    HOME
-========================================================= */
+========================= */
 
 function showHome(){
-
     activeProjectId = null;
 
     const app = document.getElementById("app");
 
-    app.innerHTML = "";
+    app.innerHTML = `
+        <div class="screen">
+            <div class="home-header">
+                <div>
+                    <div class="logo">Speedrun Timer</div>
+                    <div class="subtitle">Runs · Segmente · Zeiten</div>
+                </div>
 
-    const main = document.createElement("main");
-    main.className = "main";
+                <button class="primary-button" id="newProjectButton">
+                    + Speedrun
+                </button>
+            </div>
 
-    const title = document.createElement("div");
-    title.className = "title";
-    title.textContent = "Meine Speedruns";
+            <div class="project-list" id="projectList"></div>
+        </div>
+    `;
 
-    const subtitle = document.createElement("div");
-    subtitle.className = "subtitle";
-    subtitle.textContent =
-        "Verwalte deine Spiele, Segmente und Runs.";
+    document
+        .getElementById("newProjectButton")
+        .onclick = () => createProjectForm();
 
-    const create = document.createElement("button");
-    create.type = "button";
-    create.className = "button primary";
-    create.textContent = "+ Neuer Speedrun";
-
-    create.onclick = createProject;
-
-    const projects = document.createElement("div");
-    projects.className = "projects";
-
-    main.append(
-        title,
-        subtitle,
-        create,
-        projects
-    );
-
-    app.appendChild(main);
-
-    renderProjects(projects);
+    renderProjects();
 }
 
-function renderProjects(container){
+function renderProjects(){
+    const container = document.getElementById("projectList");
 
-    container.innerHTML = "";
-
-    if(data.projects.length === 0){
-
-        const empty = document.createElement("div");
-        empty.className = "empty";
-
-        empty.innerHTML =
-            '<div class="empty-title">Noch keine Speedruns</div>' +
-            'Erstelle deinen ersten Speedrun.';
-
-        container.appendChild(empty);
-
+    if(!container){
         return;
     }
 
+    if(data.projects.length === 0){
+        container.innerHTML = `
+            <div class="empty">
+                Noch kein Speedrun vorhanden.<br><br>
+                Erstelle deinen ersten Run.
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = "";
+
     data.projects.forEach(project => {
-
         const card = document.createElement("div");
-        card.className = "project";
+        card.className = "project-card";
 
-        const name = document.createElement("div");
-        name.className = "project-name";
-        name.textContent = project.name;
+        card.innerHTML = `
+            <div class="project-top">
+                <div>
+                    <div class="project-name">
+                        ${escapeHtml(project.name)}
+                    </div>
 
-        const pb = getPB(project);
+                    <div class="project-info">
+                        ${project.segments.length} Segmente
+                        · ${project.history.length} Runs
+                    </div>
+                </div>
+            </div>
 
-        const info = document.createElement("div");
-        info.className = "project-info";
+            <div class="project-actions">
+                <button class="small-button open">
+                    Starten
+                </button>
 
-        info.textContent =
-            project.segments.length +
-            " Segmente • " +
-            project.history.length +
-            " Runs • PB: " +
-            (pb > 0 ? timeText(pb) : "—");
+                <button class="small-button edit">
+                    Bearbeiten
+                </button>
 
-        const buttons = document.createElement("div");
-        buttons.className = "project-buttons";
+                <button class="small-button danger delete">
+                    Löschen
+                </button>
+            </div>
+        `;
 
-        const start = makeButton(
-            "Starten",
-            "primary"
-        );
-
-        const edit = makeButton(
-            "Bearbeiten",
-            ""
-        );
-
-        const segments = makeButton(
-            "Segmente",
-            ""
-        );
-
-        const remove = makeButton(
-            "Löschen",
-            ""
-        );
-
-        start.onclick = () => openProject(project.id);
-
-        edit.onclick = () => editProject(project.id);
-
-        segments.onclick = () => {
+        card.querySelector(".open").onclick = () => {
             openProject(project.id);
-            openSegmentEditor();
         };
 
-        remove.onclick = () => deleteProject(project.id);
+        card.querySelector(".edit").onclick = () => {
+            editProject(project.id);
+        };
 
-        buttons.append(
-            start,
-            edit,
-            segments,
-            remove
-        );
-
-        card.append(
-            name,
-            info,
-            buttons
-        );
+        card.querySelector(".delete").onclick = () => {
+            deleteProject(project.id);
+        };
 
         container.appendChild(card);
     });
 }
 
-function makeButton(text,extraClass){
 
-    const button = document.createElement("button");
+/* =========================
+   PROJECT CREATION
+========================= */
 
-    button.type = "button";
-    button.className =
-        "button small" +
-        (extraClass ? " " + extraClass : "");
-
-    button.textContent = text;
-
-    return button;
-}
-
-
-/* =========================================================
-   PROJEKT ERSTELLEN
-========================================================= */
-
-function createProject(){
-
-    openModal(
-        "Neuer Speedrun",
-        createProjectForm(),
-        function(){
-
-            const input =
-                document.getElementById("projectName");
-
-            const name =
-                input.value.trim();
-
-            if(!name){
-                input.focus();
-                return;
-            }
-
-            const project = {
-                id:id(),
-                name:name,
-                segments:[
-                    {
-                        id:id(),
-                        name:"Segment 1"
-                    }
-                ],
-                history:[]
-            };
-
-            data.projects.push(project);
-
-            save();
-            closeModal();
-
-            openProject(project.id);
-        }
-    );
-
-    setTimeout(() => {
-        const input =
-            document.getElementById("projectName");
-
-        if(input){
-            input.focus();
-        }
-    },50);
+function createProjectForm(){
+    renderProjectForm(null);
 }
 
 function editProject(projectId){
-
-    const project =
-        data.projects.find(
-            item => item.id === projectId
-        );
+    const project = data.projects.find(item => item.id === projectId);
 
     if(!project){
         return;
     }
 
-    openModal(
-        "Speedrun bearbeiten",
-        createProjectForm(project.name),
-        function(){
+    renderProjectForm(project);
+}
 
-            const input =
-                document.getElementById("projectName");
+function renderProjectForm(project){
+    const isEdit = !!project;
 
-            const name =
-                input.value.trim();
+    const app = document.getElementById("app");
 
-            if(!name){
-                input.focus();
-                return;
-            }
+    app.innerHTML = `
+        <div class="screen">
+
+            <div class="form-box">
+
+                <div class="form-title">
+                    ${isEdit ? "Speedrun bearbeiten" : "Neuer Speedrun"}
+                </div>
+
+                <div class="field">
+                    <label for="projectName">
+                        Name
+                    </label>
+
+                    <input
+                        id="projectName"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="z. B. Any% No Major Glitches"
+                        value="${isEdit ? escapeHtml(project.name) : ""}"
+                    >
+                </div>
+
+                <div class="segment-editor">
+
+                    <div class="segment-editor-title">
+                        Segmente
+                    </div>
+
+                    <div id="segmentEditor"></div>
+
+                    <button class="add-segment" id="addSegmentButton">
+                        + Segment hinzufügen
+                    </button>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <button
+                        class="small-button"
+                        id="cancelProjectButton"
+                    >
+                        Abbrechen
+                    </button>
+
+                    <button
+                        class="primary-button"
+                        id="saveProjectButton"
+                    >
+                        ${isEdit ? "Speichern" : "Erstellen"}
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    const editor = document.getElementById("segmentEditor");
+
+    let segments = [];
+
+    if(isEdit){
+        segments = project.segments.map(segment => ({
+            id:segment.id,
+            name:segment.name
+        }));
+    }
+
+    if(segments.length === 0){
+        segments.push({
+            id:id(),
+            name:"Segment 1"
+        });
+    }
+
+    function renderEditor(){
+        editor.innerHTML = "";
+
+        segments.forEach((segment,index) => {
+
+            const row = document.createElement("div");
+            row.className = "edit-segment-row";
+
+            const number = document.createElement("div");
+            number.className = "segment-number";
+            number.textContent = index + 1;
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = segment.name;
+            input.autocomplete = "off";
+
+            input.addEventListener("input",() => {
+                segment.name = input.value;
+            });
+
+            const remove = document.createElement("button");
+            remove.className = "remove-segment";
+            remove.textContent = "×";
+
+            remove.onclick = () => {
+
+                if(segments.length <= 1){
+                    return;
+                }
+
+                segments.splice(index,1);
+                renderEditor();
+            };
+
+            row.appendChild(number);
+            row.appendChild(input);
+            row.appendChild(remove);
+
+            editor.appendChild(row);
+        });
+    }
+
+    renderEditor();
+
+    document.getElementById("addSegmentButton").onclick = () => {
+
+        segments.push({
+            id:id(),
+            name:"Segment " + (segments.length + 1)
+        });
+
+        renderEditor();
+
+        const inputs = editor.querySelectorAll("input");
+
+        if(inputs.length){
+            inputs[inputs.length - 1].focus();
+        }
+    };
+
+    document.getElementById("cancelProjectButton").onclick = () => {
+        showHome();
+    };
+
+    document.getElementById("saveProjectButton").onclick = () => {
+
+        const nameInput = document.getElementById("projectName");
+
+        const name = nameInput.value.trim();
+
+        if(!name){
+            nameInput.focus();
+            return;
+        }
+
+        const cleanSegments = segments
+            .map(segment => ({
+                id:segment.id || id(),
+                name:segment.name.trim()
+            }))
+            .filter(segment => segment.name.length > 0);
+
+        if(cleanSegments.length === 0){
+            return;
+        }
+
+        if(isEdit){
 
             project.name = name;
+            project.segments = cleanSegments;
 
-            save();
-            closeModal();
+            project.history = Array.isArray(project.history)
+                ? project.history
+                : [];
 
-            showHome();
+        }else{
+
+            data.projects.push({
+                id:id(),
+                name:name,
+                segments:cleanSegments,
+                history:[]
+            });
         }
-    );
 
-    setTimeout(() => {
-        const input =
-            document.getElementById("projectName");
-
-        if(input){
-            input.focus();
-            input.select();
-        }
-    },50);
-}
-
-function createProjectForm(value = ""){
-
-    const wrapper = document.createElement("div");
-
-    const label = document.createElement("label");
-    label.className = "form-label";
-    label.textContent = "Name des Speedruns";
-
-    const input = document.createElement("input");
-    input.id = "projectName";
-    input.className = "form-input";
-    input.type = "text";
-    input.maxLength = 80;
-    input.autocomplete = "off";
-    input.value = value;
-    input.placeholder = "z.B. Game Any%";
-
-    wrapper.append(
-        label,
-        input
-    );
-
-    return wrapper;
+        save();
+        showHome();
+    };
 }
 
 
-/* =========================================================
-   PROJEKT LÖSCHEN
-========================================================= */
+/* =========================
+   DELETE PROJECT
+========================= */
 
 function deleteProject(projectId){
 
-    const project =
-        data.projects.find(
-            item => item.id === projectId
-        );
+    const project = data.projects.find(item => item.id === projectId);
 
     if(!project){
         return;
     }
 
-    function reallyDelete(){
+    const doDelete = () => {
 
-        data.projects =
-            data.projects.filter(
-                item => item.id !== projectId
-            );
+        data.projects = data.projects.filter(
+            item => item.id !== projectId
+        );
 
         save();
-
         showHome();
-    }
+    };
 
     if(data.settings.confirmDelete){
 
         confirmBox(
             "Speedrun löschen?",
             "Der Speedrun und seine gespeicherten Runs werden gelöscht.",
-            reallyDelete
+            doDelete
         );
 
     }else{
-        reallyDelete();
+
+        doDelete();
+
     }
 }
 
 
-/* =========================================================
-   TIMER ÖFFNEN
-========================================================= */
+/* =========================
+   OPEN TIMER
+========================= */
 
 function openProject(projectId){
 
-    const project =
-        data.projects.find(
-            item => item.id === projectId
-        );
+    const project = data.projects.find(
+        item => item.id === projectId
+    );
 
     if(!project){
         return;
@@ -1159,17 +1041,16 @@ function resetTimerState(){
         running:false,
         finished:false,
         currentSegment:0,
-        segmentTimes:
-            project.segments.map(() => 0),
+        segmentTimes:project.segments.map(() => 0),
         segmentStartedAt:0,
         runStartedAt:null
     };
 }
 
 
-/* =========================================================
-   TIMER
-========================================================= */
+/* =========================
+   TIMER RENDER
+========================= */
 
 function renderTimer(){
 
@@ -1180,330 +1061,152 @@ function renderTimer(){
         return;
     }
 
-    const app =
-        document.getElementById("app");
+    const app = document.getElementById("app");
 
-    app.innerHTML = "";
+    app.innerHTML = `
+        <div class="timer-screen">
 
-    const main =
-        document.createElement("main");
+            <div class="timer-header">
 
-    main.className = "main";
+                <button class="back-button" id="backButton">
+                    ← Zurück
+                </button>
 
-    const header =
-        document.createElement("div");
+                <div class="timer-title">
+                    ${escapeHtml(project.name)}
+                </div>
 
-    header.className = "timer-header";
+                <div style="width:68px"></div>
 
-    const name =
-        document.createElement("div");
+            </div>
 
-    name.className = "timer-name";
-    name.textContent = project.name;
+            <div class="timer-content">
 
-    const headerButtons =
-        document.createElement("div");
+                <div class="big-time" id="bigTime">
+                    00:00.000
+                </div>
 
-    headerButtons.className =
-        "timer-header-buttons";
+                <div class="run-status" id="runStatus">
+                    Bereit
+                </div>
 
-    const segmentButton =
-        makeButton("Segmente","");
+                <div class="segment-list" id="segmentList"></div>
 
-    const historyButton =
-        makeButton("History","");
+                <div class="history-section">
 
-    const backButton =
-        makeButton("Zurück","");
+                    <div class="section-title">
+                        Runs
+                    </div>
 
-    segmentButton.onclick =
-        openSegmentEditor;
+                    <div id="historyList"></div>
 
-    historyButton.onclick = () => {
+                </div>
 
-        const panel =
-            document.getElementById("historyPanel");
+            </div>
 
-        if(panel){
-            panel.scrollIntoView({
-                behavior:"smooth"
-            });
-        }
-    };
+            <div class="controls" id="controls"></div>
 
-    backButton.onclick = leaveTimer;
+        </div>
+    `;
 
-    headerButtons.append(
-        segmentButton,
-        historyButton,
-        backButton
+    document.getElementById("backButton").onclick = leaveTimer;
+
+    const controls = document.getElementById("controls");
+
+    const start = createControl(
+        "Start",
+        "start"
     );
 
-    header.append(
-        name,
-        headerButtons
+    const split = createControl(
+        "Split",
+        "split"
     );
 
-
-    const timerBox =
-        document.createElement("div");
-
-    timerBox.className = "timer-box";
-
-    const timerDisplay =
-        document.createElement("div");
-
-    timerDisplay.id = "timerDisplay";
-    timerDisplay.className = "timer";
-    timerDisplay.textContent =
-        timeText(getCurrentElapsed());
-
-    const status =
-        document.createElement("div");
-
-    status.id = "timerStatus";
-    status.className = "timer-status";
-
-    timerBox.append(
-        timerDisplay,
-        status
+    const pauseButton = createControl(
+        timer.running ? "Stop" : "Stop",
+        "stop"
     );
 
+    pauseButton.id = "stopContinueButton";
 
-    const compare =
-        document.createElement("div");
+    if(timer.finished){
 
-    compare.className = "compare";
+        pauseButton.textContent = "Stop";
+        pauseButton.disabled = true;
 
-    const currentBox =
-        createCompareBox(
-            "Segment",
-            project.segments[
-                timer.currentSegment
-            ].name
-        );
+    }else if(timer.running){
 
-    const best =
-        getBestSegment(
-            project,
-            timer.currentSegment
-        );
+        pauseButton.textContent = "Stop";
 
-    const bestBox =
-        createCompareBox(
-            "Bestes Segment",
-            best > 0 ? timeText(best) : "—"
-        );
+    }else{
 
-    const diffBox =
-        createCompareBox(
-            "Vergleich",
-            "—"
-        );
+        pauseButton.textContent = "Weiter";
 
-    diffBox.id = "diffBox";
+        pauseButton.classList.remove("stop");
+        pauseButton.classList.add("start");
 
-    compare.append(
-        currentBox,
-        bestBox,
-        diffBox
+    }
+
+    const reset = createControl(
+        "Reset",
+        ""
     );
-
-
-    const controls =
-        document.createElement("div");
-
-    controls.className = "controls";
-
-    const start =
-        createControl("Start","start");
-
-    const split =
-        createControl("Split","split");
-
-    const stop =
-        createControl("Stop","stop");
-
-    const reset =
-        createControl("Reset","");
 
     start.onclick = startTimer;
     split.onclick = splitTimer;
-    stop.onclick = stopTimer;
+
+    if(timer.running){
+        pauseButton.onclick = stopTimer;
+    }else{
+        pauseButton.onclick = continueTimer;
+    }
+
     reset.onclick = resetTimer;
 
-    controls.append(
-        start,
-        split,
-        stop,
-        reset
-    );
-
-
-    const segmentPanel =
-        document.createElement("div");
-
-    segmentPanel.className = "panel";
-
-    const segmentHeader =
-        document.createElement("div");
-
-    segmentHeader.className =
-        "panel-header";
-
-    const segmentTitle =
-        document.createElement("div");
-
-    segmentTitle.className =
-        "panel-title";
-
-    segmentTitle.textContent =
-        "Segmente";
-
-    const edit =
-        makeButton(
-            "Bearbeiten",
-            ""
-        );
-
-    edit.onclick =
-        openSegmentEditor;
-
-    segmentHeader.append(
-        segmentTitle,
-        edit
-    );
-
-    const segmentContainer =
-        document.createElement("div");
-
-    segmentContainer.id =
-        "segmentContainer";
-
-    segmentPanel.append(
-        segmentHeader,
-        segmentContainer
-    );
-
-
-    const historyPanel =
-        document.createElement("div");
-
-    historyPanel.id = "historyPanel";
-    historyPanel.className = "panel";
-
-    const historyHeader =
-        document.createElement("div");
-
-    historyHeader.className =
-        "panel-header";
-
-    const historyTitle =
-        document.createElement("div");
-
-    historyTitle.className =
-        "panel-title";
-
-    historyTitle.textContent =
-        "Runs";
-
-    historyHeader.append(
-        historyTitle
-    );
-
-    const historyContainer =
-        document.createElement("div");
-
-    historyContainer.id =
-        "historyContainer";
-
-    historyPanel.append(
-        historyHeader,
-        historyContainer
-    );
-
-
-    main.append(
-        header,
-        timerBox,
-        compare,
-        controls,
-        segmentPanel,
-        historyPanel
-    );
-
-    app.appendChild(main);
+    controls.appendChild(start);
+    controls.appendChild(split);
+    controls.appendChild(pauseButton);
+    controls.appendChild(reset);
 
     updateTimerDisplay();
     renderSegmentRows();
     renderHistoryRows();
-
-    if(timer.running){
-        requestAnimationFrame(liveTimer);
-    }
 }
 
-function createControl(text,extra){
+function createControl(text,className){
 
-    const button =
-        document.createElement("button");
+    const button = document.createElement("button");
 
-    button.type = "button";
+    button.className = "control";
 
-    button.className =
-        "control" +
-        (extra ? " " + extra : "");
+    if(className){
+        button.classList.add(className);
+    }
 
     button.textContent = text;
 
     return button;
 }
 
-function createCompareBox(label,value){
 
-    const box =
-        document.createElement("div");
-
-    box.className =
-        "compare-box";
-
-    const labelElement =
-        document.createElement("div");
-
-    labelElement.className =
-        "compare-label";
-
-    labelElement.textContent =
-        label;
-
-    const valueElement =
-        document.createElement("div");
-
-    valueElement.className =
-        "compare-value";
-
-    valueElement.textContent =
-        value;
-
-    box.append(
-        labelElement,
-        valueElement
-    );
-
-    return box;
-}
+/* =========================
+   TIMER CALCULATION
+========================= */
 
 function getCurrentElapsed(){
 
     if(!timer.running){
-        return timer.segmentTimes[
-            timer.currentSegment
-        ] || 0;
+        return timer.segmentTimes[timer.currentSegment] || 0;
     }
 
-    return performance.now() -
-        timer.segmentStartedAt;
+    return performance.now() - timer.segmentStartedAt;
 }
+
+
+/* =========================
+   START
+========================= */
 
 function startTimer(){
 
@@ -1515,18 +1218,72 @@ function startTimer(){
         return;
     }
 
+    const hasTime = timer.segmentTimes.some(
+        value => value > 0
+    );
+
+    if(hasTime){
+        continueTimer();
+        return;
+    }
+
     timer.running = true;
-    timer.segmentStartedAt =
-        performance.now();
+
+    timer.segmentStartedAt = performance.now();
 
     if(!timer.runStartedAt){
         timer.runStartedAt = Date.now();
     }
 
+    updateStopButton();
     updateTimerDisplay();
 
     requestAnimationFrame(liveTimer);
 }
+
+
+/* =========================
+   CONTINUE
+========================= */
+
+function continueTimer(){
+
+    if(timer.running){
+        return;
+    }
+
+    if(timer.finished){
+        return;
+    }
+
+    const project = getProject();
+
+    if(!project){
+        return;
+    }
+
+    const alreadyElapsed =
+        timer.segmentTimes[timer.currentSegment] || 0;
+
+    timer.running = true;
+
+    timer.segmentStartedAt =
+        performance.now() - alreadyElapsed;
+
+    if(!timer.runStartedAt){
+        timer.runStartedAt = Date.now();
+    }
+
+    updateStopButton();
+    updateTimerDisplay();
+
+    requestAnimationFrame(liveTimer);
+}
+
+
+/* =========================
+   LIVE TIMER
+========================= */
 
 function liveTimer(){
 
@@ -1539,95 +1296,10 @@ function liveTimer(){
     requestAnimationFrame(liveTimer);
 }
 
-function updateTimerDisplay(){
 
-    const project = getProject();
-
-    if(!project){
-        return;
-    }
-
-    const display =
-        document.getElementById("timerDisplay");
-
-    const status =
-        document.getElementById("timerStatus");
-
-    if(display){
-        display.textContent =
-            timeText(getCurrentElapsed());
-    }
-
-    if(status){
-
-        if(timer.finished){
-
-            status.textContent =
-                "Lauf beendet";
-
-        }else if(timer.running){
-
-            status.textContent =
-                "Läuft • " +
-                project.segments[
-                    timer.currentSegment
-                ].name;
-
-        }else{
-
-            status.textContent =
-                "Bereit • " +
-                project.segments[
-                    timer.currentSegment
-                ].name;
-        }
-    }
-
-    const diffBox =
-        document.getElementById("diffBox");
-
-    if(diffBox){
-
-        const value =
-            diffBox.querySelector(
-                ".compare-value"
-            );
-
-        const best =
-            getBestSegment(
-                project,
-                timer.currentSegment
-            );
-
-        const current =
-            getCurrentElapsed();
-
-        value.className =
-            "compare-value neutral";
-
-        if(current > 0 && best > 0){
-
-            const difference =
-                current - best;
-
-            value.textContent =
-                (difference >= 0 ? "+" : "") +
-                timeText(Math.abs(difference));
-
-            if(difference < 0){
-                value.className =
-                    "compare-value good";
-            }
-
-            if(difference > 0){
-                value.className =
-                    "compare-value bad";
-            }
-        }else{
-            value.textContent = "—";
-        }
-    }
-}
+/* =========================
+   SPLIT
+========================= */
 
 function splitTimer(){
 
@@ -1642,26 +1314,18 @@ function splitTimer(){
         return;
     }
 
-    const elapsed =
-        getCurrentElapsed();
+    const elapsed = getCurrentElapsed();
 
-    timer.segmentTimes[
-        timer.currentSegment
-    ] = elapsed;
+    timer.segmentTimes[timer.currentSegment] = elapsed;
 
-    timer.segmentStartedAt =
-        performance.now();
-
-    if(
-        timer.currentSegment >=
-        project.segments.length - 1
-    ){
+    if(timer.currentSegment >= project.segments.length - 1){
 
         timer.running = false;
         timer.finished = true;
 
         saveRun(true);
 
+        updateStopButton();
         updateTimerDisplay();
         renderSegmentRows();
         renderHistoryRows();
@@ -1671,9 +1335,17 @@ function splitTimer(){
 
     timer.currentSegment++;
 
+    timer.segmentStartedAt = performance.now();
+
+    updateStopButton();
     updateTimerDisplay();
     renderSegmentRows();
 }
+
+
+/* =========================
+   STOP / PAUSE
+========================= */
 
 function stopTimer(){
 
@@ -1681,28 +1353,82 @@ function stopTimer(){
         return;
     }
 
-    const elapsed =
-        getCurrentElapsed();
+    const elapsed = getCurrentElapsed();
 
-    timer.segmentTimes[
-        timer.currentSegment
-    ] = elapsed;
+    timer.segmentTimes[timer.currentSegment] = elapsed;
 
     timer.running = false;
 
-    saveRun(false);
+    /*
+        Wichtig:
+        Hier wird KEIN Run gespeichert.
+        Stop ist nur eine Pause.
+    */
 
+    updateStopButton();
     updateTimerDisplay();
     renderSegmentRows();
-    renderHistoryRows();
 }
+
+
+/* =========================
+   STOP BUTTON UPDATE
+========================= */
+
+function updateStopButton(){
+
+    const button =
+        document.getElementById("stopContinueButton");
+
+    if(!button){
+        return;
+    }
+
+    if(timer.finished){
+
+        button.textContent = "Stop";
+        button.disabled = true;
+
+        button.classList.remove("start");
+        button.classList.add("stop");
+
+        button.onclick = null;
+
+        return;
+    }
+
+    if(timer.running){
+
+        button.textContent = "Stop";
+
+        button.classList.remove("start");
+        button.classList.add("stop");
+
+        button.disabled = false;
+
+        button.onclick = stopTimer;
+
+    }else{
+
+        button.textContent = "Weiter";
+
+        button.classList.remove("stop");
+        button.classList.add("start");
+
+        button.disabled = false;
+
+        button.onclick = continueTimer;
+    }
+}
+
+
+/* =========================
+   RESET
+========================= */
 
 function resetTimer(){
 
-    if(
-        data.settings.confirmReset &&
-        timer.running
-    ){
+    if(data.settings.confirmReset && timer.running){
 
         confirmBox(
             "Timer zurücksetzen?",
@@ -1727,19 +1453,133 @@ function reallyResetTimer(){
     timer.running = false;
     timer.finished = false;
     timer.currentSegment = 0;
-    timer.segmentTimes =
-        project.segments.map(() => 0);
+    timer.segmentTimes = project.segments.map(() => 0);
     timer.segmentStartedAt = 0;
     timer.runStartedAt = null;
 
+    updateStopButton();
     updateTimerDisplay();
     renderSegmentRows();
 }
 
 
-/* =========================================================
-   RUN SPEICHERN
-========================================================= */
+/* =========================
+   DISPLAY
+========================= */
+
+function updateTimerDisplay(){
+
+    const bigTime = document.getElementById("bigTime");
+    const status = document.getElementById("runStatus");
+
+    if(!bigTime){
+        return;
+    }
+
+    let total = 0;
+
+    timer.segmentTimes.forEach(value => {
+        total += value || 0;
+    });
+
+    if(timer.running){
+
+        total -= timer.segmentTimes[timer.currentSegment] || 0;
+        total += getCurrentElapsed();
+
+    }
+
+    bigTime.textContent = timeText(total);
+
+    if(status){
+
+        if(timer.finished){
+            status.textContent = "Run abgeschlossen";
+
+        }else if(timer.running){
+
+            status.textContent =
+                "Segment " +
+                (timer.currentSegment + 1) +
+                " läuft";
+
+        }else if(total > 0){
+
+            status.textContent = "Pausiert";
+
+        }else{
+
+            status.textContent = "Bereit";
+        }
+    }
+}
+
+
+/* =========================
+   SEGMENTS
+========================= */
+
+function renderSegmentRows(){
+
+    const project = getProject();
+
+    const container =
+        document.getElementById("segmentList");
+
+    if(!project || !container){
+        return;
+    }
+
+    container.innerHTML = "";
+
+    project.segments.forEach((segment,index) => {
+
+        let segmentTime =
+            timer.segmentTimes[index] || 0;
+
+        if(
+            timer.running &&
+            index === timer.currentSegment
+        ){
+            segmentTime = getCurrentElapsed();
+        }
+
+        const row =
+            document.createElement("div");
+
+        row.className = "segment-row";
+
+        if(index === timer.currentSegment && !timer.finished){
+            row.classList.add("current");
+        }
+
+        if(index < timer.currentSegment){
+            row.classList.add("finished");
+        }
+
+        const name =
+            document.createElement("div");
+
+        name.className = "segment-name";
+        name.textContent = segment.name;
+
+        const time =
+            document.createElement("div");
+
+        time.className = "segment-time";
+        time.textContent = timeText(segmentTime);
+
+        row.appendChild(name);
+        row.appendChild(time);
+
+        container.appendChild(row);
+    });
+}
+
+
+/* =========================
+   SAVE RUN
+========================= */
 
 function saveRun(completed){
 
@@ -1749,226 +1589,43 @@ function saveRun(completed){
         return;
     }
 
-    const total =
-        timer.segmentTimes.reduce(
-            (sum,time) => sum + Number(time || 0),
-            0
-        );
+    let total = 0;
 
-    if(total <= 0){
-        return;
-    }
+    timer.segmentTimes.forEach(value => {
+        total += value || 0;
+    });
 
     project.history.unshift({
         id:id(),
-        date:Date.now(),
-        completed:completed,
+        timestamp:Date.now(),
         total:total,
-        segmentTimes:[
-            ...timer.segmentTimes
-        ]
+        segments:[...timer.segmentTimes],
+        completed:completed
     });
 
+    /*
+        Maximal 100 Runs behalten.
+    */
+
     if(project.history.length > 100){
-        project.history.length = 100;
+        project.history =
+            project.history.slice(0,100);
     }
 
     save();
 }
 
 
-/* =========================================================
-   BESTZEITEN
-========================================================= */
-
-function getBestSegment(project,index){
-
-    let best = Infinity;
-
-    project.history.forEach(run => {
-
-        const value =
-            Number(
-                run.segmentTimes &&
-                run.segmentTimes[index]
-                || 0
-            );
-
-        if(
-            value > 0 &&
-            value < best
-        ){
-            best = value;
-        }
-    });
-
-    return best === Infinity
-        ? 0
-        : best;
-}
-
-function getPB(project){
-
-    let best = Infinity;
-
-    project.history.forEach(run => {
-
-        if(
-            run.completed &&
-            run.total > 0 &&
-            run.total < best
-        ){
-            best = run.total;
-        }
-    });
-
-    return best === Infinity
-        ? 0
-        : best;
-}
-
-
-/* =========================================================
-   SEGMENTE
-========================================================= */
-
-function renderSegmentRows(){
-
-    const project = getProject();
-
-    const container =
-        document.getElementById(
-            "segmentContainer"
-        );
-
-    if(!project || !container){
-        return;
-    }
-
-    container.innerHTML = "";
-
-    project.segments.forEach(
-        (segment,index) => {
-
-            const row =
-                document.createElement("div");
-
-            row.className =
-                "segment-row" +
-                (
-                    index === timer.currentSegment
-                        ? " current"
-                        : ""
-                );
-
-            const number =
-                document.createElement("div");
-
-            number.className =
-                "segment-number";
-
-            number.textContent =
-                index + 1;
-
-            const name =
-                document.createElement("div");
-
-            name.className =
-                "segment-name";
-
-            name.textContent =
-                segment.name;
-
-            const time =
-                document.createElement("div");
-
-            time.className =
-                "segment-time";
-
-            time.textContent =
-                timeText(
-                    timer.segmentTimes[index] || 0
-                );
-
-            const best =
-                document.createElement("div");
-
-            best.className =
-                "segment-best";
-
-            const bestValue =
-                getBestSegment(
-                    project,
-                    index
-                );
-
-            best.textContent =
-                bestValue > 0
-                    ? timeText(bestValue)
-                    : "—";
-
-            const diff =
-                document.createElement("div");
-
-            diff.className =
-                "segment-diff";
-
-            const current =
-                timer.segmentTimes[index] || 0;
-
-            if(
-                current > 0 &&
-                bestValue > 0
-            ){
-
-                const difference =
-                    current - bestValue;
-
-                diff.textContent =
-                    (difference >= 0 ? "+" : "") +
-                    timeText(
-                        Math.abs(difference)
-                    );
-
-                if(difference < 0){
-                    diff.classList.add("good");
-                }else if(difference > 0){
-                    diff.classList.add("bad");
-                }else{
-                    diff.classList.add("neutral");
-                }
-
-            }else{
-                diff.textContent = "—";
-                diff.classList.add("neutral");
-            }
-
-            row.append(
-                number,
-                name,
-                time,
-                best,
-                diff
-            );
-
-            container.appendChild(row);
-        }
-    );
-}
-
-
-/* =========================================================
+/* =========================
    HISTORY
-========================================================= */
+========================= */
 
 function renderHistoryRows(){
 
     const project = getProject();
 
     const container =
-        document.getElementById(
-            "historyContainer"
-        );
+        document.getElementById("historyList");
 
     if(!project || !container){
         return;
@@ -1978,781 +1635,66 @@ function renderHistoryRows(){
 
     if(project.history.length === 0){
 
-        const empty =
+        container.innerHTML = `
+            <div class="history-empty">
+                Noch keine abgeschlossenen Runs.
+            </div>
+        `;
+
+        return;
+    }
+
+    project.history.forEach((run,index) => {
+
+        const row =
             document.createElement("div");
 
-        empty.style.padding = "20px";
-        empty.style.textAlign = "center";
-        empty.style.color =
-            "var(--muted)";
+        row.className = "history-row";
 
-        empty.textContent =
-            "Noch keine Runs.";
+        const left =
+            document.createElement("div");
 
-        container.appendChild(empty);
+        const title =
+            document.createElement("div");
 
-        return;
-    }
+        title.textContent =
+            "Run " + (project.history.length - index);
 
-    const pb = getPB(project);
+        const date =
+            document.createElement("div");
 
-    project.history
-        .slice(0,30)
-        .forEach((run,index) => {
+        date.className = "history-date";
+        date.textContent = dateText(run.timestamp);
 
-            const row =
-                document.createElement("div");
+        left.appendChild(title);
+        left.appendChild(date);
 
-            row.className =
-                "history-row";
+        const right =
+            document.createElement("div");
 
-            const number =
-                document.createElement("div");
+        right.className = "history-time";
+        right.textContent = timeText(run.total);
 
-            number.className =
-                "history-number";
+        row.appendChild(left);
+        row.appendChild(right);
 
-            number.textContent =
-                "#" + (index + 1);
-
-            const date =
-                document.createElement("div");
-
-            date.className =
-                "history-date";
-
-            date.textContent =
-                dateText(run.date);
-
-            const total =
-                document.createElement("div");
-
-            total.className =
-                "history-time";
-
-            total.textContent =
-                timeText(run.total);
-
-            if(
-                run.completed &&
-                run.total === pb
-            ){
-                total.classList.add("pb");
-            }
-
-            const state =
-                document.createElement("div");
-
-            if(run.completed){
-
-                state.textContent =
-                    "FINISH";
-
-                state.style.color =
-                    "var(--green)";
-
-            }else{
-
-                state.textContent =
-                    "STOP";
-
-                state.style.color =
-                    "var(--muted)";
-            }
-
-            state.style.fontWeight = "900";
-
-            row.append(
-                number,
-                date,
-                total,
-                state
-            );
-
-            container.appendChild(row);
-        });
-}
-
-
-/* =========================================================
-   SEGMENT EDITOR
-========================================================= */
-
-function collectEditorNames(){
-
-    const project = getProject();
-
-    if(!project){
-        return;
-    }
-
-    project.segments.forEach(segment => {
-
-        const input =
-            document.getElementById(
-                "segmentInput_" + segment.id
-            );
-
-        if(input){
-
-            const value =
-                input.value.trim();
-
-            segment.name =
-                value || "Segment";
-        }
+        container.appendChild(row);
     });
 }
 
-function openSegmentEditor(focusSegmentId = null){
 
-    const project = getProject();
-
-    if(!project){
-        return;
-    }
-
-    const background =
-        document.createElement("div");
-
-    background.className =
-        "modal-background";
-
-    const modal =
-        document.createElement("div");
-
-    modal.className = "modal";
-
-    const header =
-        document.createElement("div");
-
-    header.className =
-        "modal-header";
-
-    const title =
-        document.createElement("div");
-
-    title.className =
-        "modal-title";
-
-    title.textContent =
-        "Segmente bearbeiten";
-
-    const close =
-        document.createElement("button");
-
-    close.type = "button";
-    close.className =
-        "icon-button";
-
-    close.textContent = "×";
-
-    close.onclick =
-        closeModal;
-
-    header.append(
-        title,
-        close
-    );
-
-
-    const body =
-        document.createElement("div");
-
-    body.className =
-        "modal-body";
-
-    const editor =
-        document.createElement("div");
-
-    editor.className =
-        "segment-editor";
-
-
-    project.segments.forEach(
-        (segment,index) => {
-
-            const row =
-                document.createElement("div");
-
-            row.className =
-                "editor-row";
-
-            const number =
-                document.createElement("div");
-
-            number.className =
-                "editor-number";
-
-            number.textContent =
-                index + 1;
-
-
-            const input =
-                document.createElement("input");
-
-            input.type = "text";
-            input.className =
-                "editor-input";
-
-            input.id =
-                "segmentInput_" +
-                segment.id;
-
-            input.value =
-                String(segment.name || "").trim();
-
-            input.maxLength = 80;
-            input.autocomplete = "off";
-            input.spellcheck = false;
-
-
-            const up =
-                document.createElement("button");
-
-            up.type = "button";
-            up.className =
-                "editor-button";
-
-            up.textContent = "↑";
-
-            up.onclick = () => {
-
-                collectEditorNames();
-
-                if(index > 0){
-
-                    swapSegments(
-                        index,
-                        index - 1
-                    );
-
-                    save();
-
-                    openSegmentEditor(
-                        segment.id
-                    );
-                }
-            };
-
-
-            const down =
-                document.createElement("button");
-
-            down.type = "button";
-            down.className =
-                "editor-button";
-
-            down.textContent = "↓";
-
-            down.onclick = () => {
-
-                collectEditorNames();
-
-                if(
-                    index <
-                    project.segments.length - 1
-                ){
-
-                    swapSegments(
-                        index,
-                        index + 1
-                    );
-
-                    save();
-
-                    openSegmentEditor(
-                        segment.id
-                    );
-                }
-            };
-
-
-            const remove =
-                document.createElement("button");
-
-            remove.type = "button";
-            remove.className =
-                "editor-button editor-delete";
-
-            remove.textContent = "×";
-
-            remove.onclick = () => {
-
-                if(
-                    project.segments.length <= 1
-                ){
-                    return;
-                }
-
-                collectEditorNames();
-
-                project.segments.splice(
-                    index,
-                    1
-                );
-
-                timer.segmentTimes.splice(
-                    index,
-                    1
-                );
-
-                if(
-                    timer.currentSegment >=
-                    project.segments.length
-                ){
-                    timer.currentSegment =
-                        project.segments.length - 1;
-                }
-
-                save();
-
-                openSegmentEditor();
-            };
-
-
-            row.append(
-                number,
-                input,
-                up,
-                down,
-                remove
-            );
-
-            editor.appendChild(row);
-        }
-    );
-
-
-    const add =
-        document.createElement("button");
-
-    add.type = "button";
-    add.className =
-        "button primary add-segment";
-
-    add.textContent =
-        "+ Segment hinzufügen";
-
-    add.onclick =
-        addSegment;
-
-
-    body.append(
-        editor,
-        add
-    );
-
-
-    const footer =
-        document.createElement("div");
-
-    footer.className =
-        "modal-footer";
-
-
-    const cancel =
-        document.createElement("button");
-
-    cancel.type = "button";
-    cancel.className =
-        "button";
-
-    cancel.textContent =
-        "Abbrechen";
-
-    cancel.onclick =
-        closeModal;
-
-
-    const saveButton =
-        document.createElement("button");
-
-    saveButton.type = "button";
-    saveButton.className =
-        "button primary";
-
-    saveButton.textContent =
-        "Speichern";
-
-    saveButton.onclick = () => {
-
-        collectEditorNames();
-
-        save();
-
-        closeModal();
-
-        renderTimer();
-    };
-
-
-    footer.append(
-        cancel,
-        saveButton
-    );
-
-
-    modal.append(
-        header,
-        body,
-        footer
-    );
-
-    background.appendChild(modal);
-
-    document.body.appendChild(
-        background
-    );
-
-    if(focusSegmentId){
-
-        setTimeout(() => {
-
-            const input =
-                document.getElementById(
-                    "segmentInput_" +
-                    focusSegmentId
-                );
-
-            if(input){
-
-                input.focus();
-                input.select();
-            }
-
-        },50);
-    }
-}
-
-function addSegment(){
-
-    collectEditorNames();
-
-    const project = getProject();
-
-    if(!project){
-        return;
-    }
-
-    const segment = {
-        id:id(),
-        name:"Neues Segment"
-    };
-
-    project.segments.push(segment);
-
-    timer.segmentTimes.push(0);
-
-    save();
-
-    openSegmentEditor(
-        segment.id
-    );
-}
-
-function swapSegments(a,b){
-
-    const project = getProject();
-
-    if(!project){
-        return;
-    }
-
-    const segment =
-        project.segments[a];
-
-    project.segments[a] =
-        project.segments[b];
-
-    project.segments[b] =
-        segment;
-
-
-    const time =
-        timer.segmentTimes[a];
-
-    timer.segmentTimes[a] =
-        timer.segmentTimes[b];
-
-    timer.segmentTimes[b] =
-        time;
-
-
-    if(timer.currentSegment === a){
-
-        timer.currentSegment = b;
-
-    }else if(timer.currentSegment === b){
-
-        timer.currentSegment = a;
-    }
-}
-
-
-/* =========================================================
-   MODALS
-========================================================= */
-
-function openModal(title,bodyElement,onSave){
-
-    closeModal();
-
-    const background =
-        document.createElement("div");
-
-    background.className =
-        "modal-background";
-
-    const modal =
-        document.createElement("div");
-
-    modal.className =
-        "modal";
-
-
-    const header =
-        document.createElement("div");
-
-    header.className =
-        "modal-header";
-
-
-    const titleElement =
-        document.createElement("div");
-
-    titleElement.className =
-        "modal-title";
-
-    titleElement.textContent =
-        title;
-
-
-    const close =
-        document.createElement("button");
-
-    close.type = "button";
-    close.className =
-        "icon-button";
-
-    close.textContent = "×";
-
-    close.onclick =
-        closeModal;
-
-
-    header.append(
-        titleElement,
-        close
-    );
-
-
-    const body =
-        document.createElement("div");
-
-    body.className =
-        "modal-body";
-
-    if(typeof bodyElement === "string"){
-        body.innerHTML = bodyElement;
-    }else{
-        body.appendChild(bodyElement);
-    }
-
-
-    const footer =
-        document.createElement("div");
-
-    footer.className =
-        "modal-footer";
-
-
-    const cancel =
-        document.createElement("button");
-
-    cancel.type = "button";
-    cancel.className =
-        "button";
-
-    cancel.textContent =
-        "Abbrechen";
-
-    cancel.onclick =
-        closeModal;
-
-
-    const saveButton =
-        document.createElement("button");
-
-    saveButton.type = "button";
-    saveButton.className =
-        "button primary";
-
-    saveButton.textContent =
-        "Speichern";
-
-    saveButton.onclick =
-        onSave;
-
-
-    footer.append(
-        cancel,
-        saveButton
-    );
-
-
-    modal.append(
-        header,
-        body,
-        footer
-    );
-
-    background.appendChild(modal);
-
-    background.onclick = event => {
-
-        if(event.target === background){
-            closeModal();
-        }
-    };
-
-    document.body.appendChild(
-        background
-    );
-}
-
-function confirmBox(
-    title,
-    message,
-    action
-){
-
-    closeModal();
-
-    const background =
-        document.createElement("div");
-
-    background.className =
-        "modal-background";
-
-    const modal =
-        document.createElement("div");
-
-    modal.className =
-        "modal";
-
-
-    const header =
-        document.createElement("div");
-
-    header.className =
-        "modal-header";
-
-    const titleElement =
-        document.createElement("div");
-
-    titleElement.className =
-        "modal-title";
-
-    titleElement.textContent =
-        title;
-
-    header.appendChild(
-        titleElement
-    );
-
-
-    const body =
-        document.createElement("div");
-
-    body.className =
-        "modal-body";
-
-    body.style.color =
-        "var(--muted)";
-
-    body.textContent =
-        message;
-
-
-    const footer =
-        document.createElement("div");
-
-    footer.className =
-        "modal-footer";
-
-
-    const cancel =
-        document.createElement("button");
-
-    cancel.type = "button";
-    cancel.className =
-        "button";
-
-    cancel.textContent =
-        "Abbrechen";
-
-    cancel.onclick =
-        closeModal;
-
-
-    const okay =
-        document.createElement("button");
-
-    okay.type = "button";
-    okay.className =
-        "button red";
-
-    okay.textContent =
-        "Bestätigen";
-
-    okay.onclick = () => {
-
-        closeModal();
-        action();
-    };
-
-
-    footer.append(
-        cancel,
-        okay
-    );
-
-    modal.append(
-        header,
-        body,
-        footer
-    );
-
-    background.appendChild(modal);
-
-    document.body.appendChild(
-        background
-    );
-}
-
-function closeModal(){
-
-    document
-        .querySelectorAll(".modal-background")
-        .forEach(element => {
-            element.remove();
-        });
-}
-
-
-/* =========================================================
-   TIMER VERLASSEN
-========================================================= */
+/* =========================
+   LEAVE TIMER
+========================= */
 
 function leaveTimer(){
 
     if(timer.running){
 
         confirmBox(
-            "Lauf verlassen?",
-            "Der aktuelle Lauf läuft noch.",
-            showHome
+            "Timer verlassen?",
+            "Der aktuelle Timer läuft noch. Beim Verlassen geht der aktuelle Lauf verloren.",
+            () => showHome()
         );
 
         return;
@@ -2762,251 +1704,61 @@ function leaveTimer(){
 }
 
 
-/* =========================================================
-   EINSTELLUNGEN
-========================================================= */
+/* =========================
+   CONFIRM MODAL
+========================= */
 
-function showSettings(){
+function confirmBox(title,text,onConfirm){
 
-    const totalRuns =
-        data.projects.reduce(
-            (sum,project) =>
-                sum + project.history.length,
-            0
-        );
+    const existing =
+        document.querySelector(".modal-overlay");
 
-    const body =
-        document.createElement("div");
-
-
-    const stats =
-        document.createElement("div");
-
-    stats.className =
-        "stat-grid";
-
-
-    const stat1 =
-        document.createElement("div");
-
-    stat1.className = "stat";
-
-    stat1.innerHTML =
-        '<div class="stat-label">Speedruns</div>' +
-        '<div class="stat-value">' +
-        data.projects.length +
-        '</div>';
-
-
-    const stat2 =
-        document.createElement("div");
-
-    stat2.className = "stat";
-
-    stat2.innerHTML =
-        '<div class="stat-label">Runs</div>' +
-        '<div class="stat-value">' +
-        totalRuns +
-        '</div>';
-
-
-    stats.append(
-        stat1,
-        stat2
-    );
-
-
-    const resetLabel =
-        document.createElement("div");
-
-    resetLabel.className =
-        "form-label";
-
-    resetLabel.style.marginTop =
-        "15px";
-
-    resetLabel.textContent =
-        "Bestätigung beim Reset";
-
-
-    const resetButton =
-        document.createElement("button");
-
-    resetButton.type = "button";
-    resetButton.className =
-        "button";
-
-    resetButton.textContent =
-        data.settings.confirmReset
-            ? "Aktiviert"
-            : "Deaktiviert";
-
-    resetButton.onclick = () => {
-
-        data.settings.confirmReset =
-            !data.settings.confirmReset;
-
-        save();
-
-        showSettings();
-    };
-
-
-    const deleteLabel =
-        document.createElement("div");
-
-    deleteLabel.className =
-        "form-label";
-
-    deleteLabel.style.marginTop =
-        "15px";
-
-    deleteLabel.textContent =
-        "Bestätigung beim Löschen";
-
-
-    const deleteButton =
-        document.createElement("button");
-
-    deleteButton.type = "button";
-    deleteButton.className =
-        "button";
-
-    deleteButton.textContent =
-        data.settings.confirmDelete
-            ? "Aktiviert"
-            : "Deaktiviert";
-
-    deleteButton.onclick = () => {
-
-        data.settings.confirmDelete =
-            !data.settings.confirmDelete;
-
-        save();
-
-        showSettings();
-    };
-
-
-    body.append(
-        stats,
-        resetLabel,
-        resetButton,
-        deleteLabel,
-        deleteButton
-    );
-
-
-    openModal(
-        "Einstellungen",
-        body,
-        closeModal
-    );
-}
-
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-document
-    .getElementById("homeButton")
-    .addEventListener(
-        "click",
-        () => {
-
-            if(
-                timer.running &&
-                getProject()
-            ){
-
-                confirmBox(
-                    "Zum Hauptmenü?",
-                    "Der aktuelle Lauf läuft noch.",
-                    showHome
-                );
-
-            }else{
-
-                showHome();
-            }
-        }
-    );
-
-document
-    .getElementById("settingsButton")
-    .addEventListener(
-        "click",
-        showSettings
-    );
-
-
-/* =========================================================
-   TASTATUR
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if(event.key === "Escape"){
-
-            closeModal();
-            return;
-        }
-
-        if(
-            document.querySelector(
-                ".modal-background"
-            )
-        ){
-            return;
-        }
-
-        if(!getProject()){
-            return;
-        }
-
-        const active =
-            document.activeElement;
-
-        if(
-            active &&
-            (
-                active.tagName === "INPUT" ||
-                active.tagName === "TEXTAREA"
-            )
-        ){
-            return;
-        }
-
-        if(event.code === "Space"){
-
-            event.preventDefault();
-
-            if(timer.running){
-                splitTimer();
-            }else{
-                startTimer();
-            }
-        }
-
-        if(
-            event.key.toLowerCase() === "r"
-        ){
-            resetTimer();
-        }
+    if(existing){
+        existing.remove();
     }
-);
 
+    const overlay =
+        document.createElement("div");
 
-/* =========================================================
-   START
-========================================================= */
+    overlay.className = "modal-overlay";
 
-load();
-showHome();
+    overlay.innerHTML = `
+        <div class="modal">
 
+            <div class="modal-title">
+                ${escapeHtml(title)}
+            </div>
+
+            <div class="modal-text">
+                ${escapeHtml(text)}
+            </div>
+
+            <div class="modal-actions">
+
+                <button class="cancel">
+                    Abbrechen
+                </button>
+
+                <button class="confirm">
+                    Bestätigen
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelector(".cancel").onclick = () => {
+        overlay.remove();
+    };
+
+    overlay.querySelector(".confirm").onclick = () => {
+        overlay.remove();
+        onConfirm();
+    };
+}
 </script>
 
 </body>
